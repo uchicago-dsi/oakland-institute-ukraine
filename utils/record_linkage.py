@@ -4,6 +4,9 @@
 # Last modified: -
 # DSI
 
+import recordlinkage
+from deep_translator import GoogleTranslator, DeeplTranslator
+
 
 def translate_column(df, column, translator, source="uk", target="en"):
     """

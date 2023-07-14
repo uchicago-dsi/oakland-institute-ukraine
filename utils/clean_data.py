@@ -4,6 +4,9 @@
 # Last modified: -
 # DSI
 
+import sys
+import unicodedata
+
 def keep_chr(ch):
     """
     Find all characters that are classifed as punctuation in Unicode.
