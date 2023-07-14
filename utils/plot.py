@@ -4,6 +4,7 @@
 # Last modified: -
 # DSI
 
+import matplotlib.pyplot as plt
 
 def cargo_grouping(df, group, other_cols, sort, asc_bool, new_name = None):
     """
