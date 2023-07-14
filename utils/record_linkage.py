@@ -1,0 +1,79 @@
+# Name: Josemaria Macedo Carrillo
+# Ttile: Record linkage functions
+# Created: 07/14/23
+# Last modified: -
+# DSI
+
+
+def translate_column(df, column, translator, source="uk", target="en"):
+    """
+    Translate string column faster with Google or Deepl translator.
+
+    Inputs:
+        df (DataFrame): dataset
+        column (str): name of column to translate. Column values should be
+            strings
+        translator (str): translator to use. Can be either 'google' or 'deepl'
+        source (str): code of language to translate. Default is 'uk' (Ukrainian)
+        target (str): target of language to translate. Default is 'en' (English)
+
+    Return: None. Adds new column to passed dataframe.
+    """
+
+    # We create list with unique column values so we only translate neccesary
+    # number of values
+    unique_val = df[column].unique()
+
+    # Translate with Google Translate
+    d = {}
+    if translator == "google":
+        for val in unique_val:
+            d[val] = GoogleTranslator(source=source, target=target).translate(val)
+        df[column.lower() + "_gt"] = df[column].apply(lambda x: d[x])
+    elif translator == "deepl":
+        for val in unique_val:
+            d[val] = DeeplTranslator(api_key="38e53e96-d3f6-559d-f08b-163d92b711a8:fx", source=source, target=target, use_free_api=True).translate(val)
+        df[column.lower() + "_deepl"] = df[column].apply(lambda x: d[x])
+    else:
+        return "Wrong translator name. Use 'google' or 'deepl'."
+    
+
+def find_matches(dfA, dfB, exact_vars= None, string_vars=None, block_vars=None):
+    """
+    Find most possible matches between two datasets based on different columns
+
+    Inputs:
+        dfA (DataFrame): first dataset to match
+        dfB (DataFrame): second dataset to match
+        exact_vars (lst): list of strings with variables names we want to match
+            exactly. If empty, it's set to "None" by default
+        string_vars (lst): list of strings with variables names we want to match
+            by the Jaro Winkler distance rule. If empty, it's set to "None" by
+            default
+        block_vars (lst): list of strings with blocking variables names. If
+            empty, it's set to "None" by default.
+
+    Returns (DataFrame): dataframe with matches from both datasets. Matches are
+        not necessarily unique.
+    """
+
+    indexer = recordlinkage.Index()
+    for block in block_vars:
+        indexer.block(block)
+    candidate_links = indexer.index(dfA, dfB)
+
+    # Comparison step
+    compare_cl = recordlinkage.Compare()
+
+    for exact in exact_vars:
+        compare_cl.exact(exact, exact, label=exact)
+    for string in string_vars:
+        compare_cl.string(string, string, method="jarowinkler", threshold=0.9, label=string)
+
+    features = compare_cl.compute(candidate_links, dfA, dfB)
+
+    # Classification step
+    matches = features[features.sum(axis=1) > 1]
+    print("Number of matches: ",len(matches))
+    
+    return matches
