@@ -5,40 +5,6 @@
 # DSI
 
 import recordlinkage
-from deep_translator import GoogleTranslator, DeeplTranslator
-
-
-def translate_column(df, column, translator, source="uk", target="en"):
-    """
-    Translate string column faster with Google or Deepl translator.
-
-    Inputs:
-        df (DataFrame): dataset
-        column (str): name of column to translate. Column values should be
-            strings
-        translator (str): translator to use. Can be either 'google' or 'deepl'
-        source (str): code of language to translate. Default is 'uk' (Ukrainian)
-        target (str): target of language to translate. Default is 'en' (English)
-
-    Return: None. Adds new column to passed dataframe.
-    """
-
-    # We create list with unique column values so we only translate neccesary
-    # number of values
-    unique_val = df[column].unique()
-
-    # Translate with Google Translate
-    d = {}
-    if translator == "google":
-        for val in unique_val:
-            d[val] = GoogleTranslator(source=source, target=target).translate(val)
-        df[column.lower() + "_gt"] = df[column].apply(lambda x: d[x])
-    elif translator == "deepl":
-        for val in unique_val:
-            d[val] = DeeplTranslator(api_key="38e53e96-d3f6-559d-f08b-163d92b711a8:fx", source=source, target=target, use_free_api=True).translate(val)
-        df[column.lower() + "_deepl"] = df[column].apply(lambda x: d[x])
-    else:
-        return "Wrong translator name. Use 'google' or 'deepl'."
     
 
 def find_matches(dfA, dfB, exact_vars= None, string_vars=None, block_vars=None):
