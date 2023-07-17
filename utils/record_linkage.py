@@ -40,6 +40,7 @@ def find_matches(dfA, dfB, exact_vars= None, string_vars=None, block_vars=None):
         compare_cl.string(string, string, method="jarowinkler", threshold=0.9, label=string)
 
     features = compare_cl.compute(candidate_links, dfA, dfB)
+    print("Full matches:\n", len(features), "\n", features)
 
     # Classification step
     matches = features[features.sum(axis=1) > 1]
