@@ -1,5 +1,5 @@
 # Name: Josemaria Macedo Carrillo
-# Ttile: Record linkage functions
+# Title: Record linkage functions
 # Created: 07/14/23
 # Last modified: -
 # DSI

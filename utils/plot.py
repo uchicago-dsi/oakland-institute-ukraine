@@ -1,5 +1,5 @@
 # Name: Josemaria Macedo Carrillo
-# Ttile: Plot functions
+# Title: Plot functions
 # Created: 07/14/23
 # Last modified: -
 # DSI
