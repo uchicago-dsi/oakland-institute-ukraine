@@ -1,5 +1,5 @@
 # Name: Josemaria Macedo Carrillo
-# Ttile: Plot functions
+# Title: Clean data
 # Created: 07/14/23
 # Last modified: -
 # DSI
@@ -11,14 +11,14 @@ from deep_translator import GoogleTranslator, DeeplTranslator
 def keep_chr(ch):
     """
     Find all characters that are classifed as punctuation in Unicode.
-    This function comes from CAPP121 Programming Assigment 3.
+    Reference: CAPP121 course, Programming Assigment 3.
 
     Inputs:
         ch (str): character number
     
     Returns: character in Unicode
     """
-    
+
     return unicodedata.category(ch).startswith('P')
 
 def rename_columns(df):
@@ -32,8 +32,8 @@ def rename_columns(df):
     Returns (DataFrame): dataframe with new column names.
     """
     
-    # Create string with punctuation marks we want to remove. Took this string
-    # function from CAPP121 course (Programming Assigment 3): https://github.com/uchicago-CAPP30121-aut-2022/pa3-jmacedoc1/blob/main/analyze.py
+    # Create string with punctuation marks we want to remove. Reference: CAPP121
+    # course, Programming Assigment 3.
     PUNCTUATION = " ".join([chr(i) for i in range(sys.maxunicode)
                             if keep_chr(chr(i))])
     
@@ -45,6 +45,33 @@ def rename_columns(df):
     df = df.rename(columns=d)
 
     return df
+
+def create_columns(df, source):
+    """
+    Create columns necessary for time series plots.
+
+    Inputs:
+        df (DataFrame): dataframe, either from Import Genius or the Black Sea
+            Grain Initiative datasets.
+        source (str): data source, either "ig" (Import Genius) or "bsgi" (Black
+            Sea Grain Initiative).
+    
+    Returns: None. Changes to dataframe are done in place in input dataframe.
+    """
+    assert source == "ig" or source == "bsgi", "Wrong data source Error: source\
+                                                must be either 'ig' or 'bsgi'."
+    
+    if source == "ig":
+        df["year"] = df["export_date"].dt.year
+        df["month"] = df["export_date"].dt.month
+        df["weight_ton"] = df["weight_kg"] / 1000
+        df["date"] = df["month"].astype(str) + "/" + df["year"].astype(str)
+
+    else:
+        df["year"] = df["departure_date"].dt.year
+        df["month"] = df["departure_date"].dt.month
+        df = df.rename(columns={"metric_tons": "weight_ton"})
+        df["date"] = df["month"].astype(str) + "/" + df["year"].astype(str)
 
 def translate_column(df, column, translator, source="uk", target="en"):
     """
@@ -73,7 +100,9 @@ def translate_column(df, column, translator, source="uk", target="en"):
         df[column.lower() + "_gt"] = df[column].apply(lambda x: d[x])
     elif translator == "deepl":
         for val in unique_val:
+            # REMOVE API KEY AND SUBSTITUTE WITH ENVIRONMENT VARIABLE
             d[val] = DeeplTranslator(api_key="38e53e96-d3f6-559d-f08b-163d92b711a8:fx", source=source, target=target, use_free_api=True).translate(val)
         df[column.lower() + "_deepl"] = df[column].apply(lambda x: d[x])
     else:
+        # CHANGE THIS FOR ASSERTION ERROR AT THE BEGGINING OF THE FUNCTION
         return "Wrong translator name. Use 'google' or 'deepl'."
