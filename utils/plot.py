@@ -5,6 +5,7 @@
 # DSI
 
 import matplotlib.pyplot as plt
+from .clean_data import standard_name
 
 def cargo_grouping(df, group, other_cols, sort, asc_bool, new_name = None):
     """
@@ -66,7 +67,7 @@ def plot_line(x_axis, y_axis, line_labels, graph_title, x_label, y_label):
     plt.xlabel(x_label)
     plt.ylabel(y_label)
     plt.legend()
-
+    plt.savefig("../output/" + standard_name(graph_title) + ".png")
 
 def plot_crops(crop, df_1, df_2):
     """

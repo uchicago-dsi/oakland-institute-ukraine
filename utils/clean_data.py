@@ -1,7 +1,7 @@
 # Name: Josemaria Macedo Carrillo
 # Title: Clean data
 # Created: 07/14/23
-# Last modified: -
+# Last modified: 07/18/23
 # DSI
 
 import sys
@@ -21,25 +21,41 @@ def keep_chr(ch):
 
     return unicodedata.category(ch).startswith('P')
 
+def standard_name(string):
+    """
+    Convert string to standard form: lowercase, no spaces and no special
+        characters.
+    
+    Inputs:
+        string (str): string we want to convert to standard form.
+    
+    Returns (str): string in standard form (lowercase, no spaces and no special
+        characters).
+    """
+    PUNCTUATION = " ".join([chr(i) for i in range(sys.maxunicode)
+                            if keep_chr(chr(i))])
+    
+    return string.lower().strip(PUNCTUATION).replace("(", "").replace(" ", "_")
+
 def rename_columns(df):
     """
     Rename all columns with standardized names (lowercase, no spaces and no
         special characters).
     
     Inputs:
-        df (DataFrame): dataset where we want to rename columns
+        df (DataFrame): dataset where we want to rename columns.
     
     Returns (DataFrame): dataframe with new column names.
     """
     
     # Create string with punctuation marks we want to remove. Reference: CAPP121
     # course, Programming Assigment 3.
-    PUNCTUATION = " ".join([chr(i) for i in range(sys.maxunicode)
-                            if keep_chr(chr(i))])
+    # PUNCTUATION = " ".join([chr(i) for i in range(sys.maxunicode)
+    #                         if keep_chr(chr(i))])
     
     d = {}
     for col in df.columns:
-        new_name = col.lower().strip(PUNCTUATION).replace("(", "").replace(" ", "_")
+        new_name = standard_name(col)
         d[col] = new_name
 
     df = df.rename(columns=d)
@@ -52,7 +68,7 @@ def create_columns(df, source):
 
     Inputs:
         df (DataFrame): dataframe, either from Import Genius or the Black Sea
-            Grain Initiative datasets.
+            Grain Initiative datasets
         source (str): data source, either "ig" (Import Genius) or "bsgi" (Black
             Sea Grain Initiative).
     
@@ -83,7 +99,7 @@ def translate_column(df, column, translator, source="uk", target="en"):
             strings
         translator (str): translator to use. Can be either 'google' or 'deepl'
         source (str): code of language to translate. Default is 'uk' (Ukrainian)
-        target (str): target of language to translate. Default is 'en' (English)
+        target (str): target of language to translate. Default is 'en' (English).
 
     Return: None. Adds new column to passed dataframe.
     """

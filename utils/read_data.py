@@ -1,7 +1,7 @@
 # Name: Josemaria Macedo Carrillo
 # Title: Read data
 # Created: 07/14/23
-# Last modified: -
+# Last modified: 07/18/23
 # DSI
 
 def compile_ig_data(path):
@@ -14,4 +14,3 @@ def compile_ig_data(path):
     Return: None. The function creates a .csv file in the same input path.
     """
 
-    
