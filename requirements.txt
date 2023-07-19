@@ -6,6 +6,9 @@ ipykernel~=6.16
 
 # project packages
 pandas~=1.4
+deep_translator~=1.11.4
+recordlinkage~=0.14
+matplotlib~=3.7.1
 
 # cluster specific
 submitit~=1.4

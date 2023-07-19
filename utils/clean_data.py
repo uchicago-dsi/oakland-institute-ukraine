@@ -81,13 +81,10 @@ def create_columns(df, source):
         df["year"] = df["export_date"].dt.year
         df["month"] = df["export_date"].dt.month
         df["weight_ton"] = df["weight_kg"] / 1000
-        df["date"] = df["month"].astype(str) + "/" + df["year"].astype(str)
 
     else:
         df["year"] = df["departure_date"].dt.year
         df["month"] = df["departure_date"].dt.month
-        df = df.rename(columns={"metric_tons": "weight_ton"})
-        df["date"] = df["month"].astype(str) + "/" + df["year"].astype(str)
 
 def translate_column(df, column, translator, source="uk", target="en"):
     """
