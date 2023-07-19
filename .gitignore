@@ -138,3 +138,6 @@ venv.bak/
 
 # data files
 *.avro
+
+# Import Genius data files
+/data/import_genius
