@@ -1,7 +1,7 @@
 # Name: Josemaria Macedo Carrillo
 # Title: Read data
-# Created: 07/14/23
-# Last modified: 07/18/23
+# Created: 07/18/23
+# Last modified:
 # DSI
 
 def compile_ig_data(path):
