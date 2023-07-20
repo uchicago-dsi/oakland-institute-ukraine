@@ -13,13 +13,13 @@ This setup should only have to be run once per machine you run it on.
    ```sh
    git clone https://github.com/uchicago-dsi/oakland-institute-ukraine.git
    ```
-4. Move the downloaded data files to the "/data" directory.
-5. Change to the root project directory:
+4. Change to the root project directory:
    ```sh
    cd oakland-institute-ukraine
    ```
-6. Build the Docker image: docker build -t jmacedoc1/getting-started .
-7. Run the Docker image: docker run -v /path/to/output:/app/output jmacedoc1/ukraine. Where
+5. Move the downloaded data files to the "/data" directory.
+5. Build the Docker image from the root project directory: docker build -t jmacedoc1/getting-started .
+6. Run the Docker image: docker run -v /path/to/output:/app/output jmacedoc1/ukraine. Where
    ```sh
    /path/to/output
    ```
