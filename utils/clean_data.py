@@ -4,9 +4,16 @@
 # Last modified: 07/18/23
 # DSI
 
+import os
 import sys
 import unicodedata
 from deep_translator import GoogleTranslator, DeeplTranslator
+import pandas as pd
+
+PRODUCTS_VAL = ["corn", "soya", "sunflower", "wheat", "sunflower", "barley",
+                "peas", "rapeseed", "sunflower", "vegetable", "soya", "canola",
+                "rapeseed", "sunflower", "mixed", "wheat", "sugar beet"]
+
 
 def keep_chr(ch):
     """
@@ -21,6 +28,9 @@ def keep_chr(ch):
 
     return unicodedata.category(ch).startswith('P')
 
+PUNCTUATION = " ".join([chr(i) for i in range(sys.maxunicode)
+                            if keep_chr(chr(i))])
+
 def standard_name(string):
     """
     Convert string to standard form: lowercase, no spaces and no special
@@ -32,26 +42,21 @@ def standard_name(string):
     Returns (str): string in standard form (lowercase, no spaces and no special
         characters).
     """
-    PUNCTUATION = " ".join([chr(i) for i in range(sys.maxunicode)
-                            if keep_chr(chr(i))])
     
     return string.lower().strip(PUNCTUATION).replace("(", "").replace(" ", "_")
 
-def rename_columns(df):
+def rename_columns(df, source):
     """
     Rename all columns with standardized names (lowercase, no spaces and no
         special characters).
     
     Inputs:
         df (DataFrame): dataset where we want to rename columns.
+        source (str): data source, either "ig" (Import Genius) or "bsgi" (Black
+            Sea Grain Initiative).
     
     Returns (DataFrame): dataframe with new column names.
     """
-    
-    # Create string with punctuation marks we want to remove. Reference: CAPP121
-    # course, Programming Assigment 3.
-    # PUNCTUATION = " ".join([chr(i) for i in range(sys.maxunicode)
-    #                         if keep_chr(chr(i))])
     
     d = {}
     for col in df.columns:
@@ -60,7 +65,32 @@ def rename_columns(df):
 
     df = df.rename(columns=d)
 
+    if source == "ig":
+        df = df.rename(columns={"export_date": "date", "destination_country": "country"})
+    else:
+        df = df.rename(columns={"departure_date": "date",
+                                "metric_tons": "weight_ton",
+                                "commodity": "product"})
+
     return df
+
+def create_crop_dict(df):
+    """
+    Create crop dictionary with BSGI crop categories as keys and simplified
+        categories as values.
+
+    Inputs:
+        df (DataFrame): dataframe where we can find the crop categories.
+    
+    Returns (dict): dictionary with crop categories.
+    """
+    products = df["product"].unique()
+
+    d = {}
+    for i, product in enumerate(products):
+        d[product] = PRODUCTS_VAL[i]
+    
+    return d
 
 def create_columns(df, source):
     """
@@ -77,14 +107,23 @@ def create_columns(df, source):
     assert source == "ig" or source == "bsgi", "Wrong data source Error: source\
                                                 must be either 'ig' or 'bsgi'."
     
+    df["year"] = df["date"].dt.year
+    df["month"] = df["date"].dt.month
+    
     if source == "ig":
-        df["year"] = df["export_date"].dt.year
-        df["month"] = df["export_date"].dt.month
         df["weight_ton"] = df["weight_kg"] / 1000
+        product_std = set(PRODUCTS_VAL)
+        
+        for product in product_std:
+            product_uk = GoogleTranslator("en", "uk").translate(product)
+            df[product] = df["product"].apply(lambda x: True if product_uk in x.lower() else False)
 
     else:
-        df["year"] = df["departure_date"].dt.year
-        df["month"] = df["departure_date"].dt.month
+        d = create_crop_dict(df)
+        df["year"] = df["date"].dt.year
+        df["month"] = df["date"].dt.month
+        df["product_std"] = df["product"].apply(lambda x: d[x])
+
 
 def translate_column(df, column, translator, source="uk", target="en"):
     """
@@ -100,22 +139,36 @@ def translate_column(df, column, translator, source="uk", target="en"):
 
     Return: None. Adds new column to passed dataframe.
     """
+    assert translator == "google" or translator == "deepl", "Wrong translator\
+                                                name. Use 'google' or 'deepl'."
+
+    # Get deepl API key from environment variable "API_KEY"
+    deepl_key = os.environ.get("API_KEY")
 
     # We create list with unique column values so we only translate neccesary
     # number of values
     unique_val = df[column].unique()
 
-    # Translate with Google Translate
     d = {}
     if translator == "google":
         for val in unique_val:
             d[val] = GoogleTranslator(source=source, target=target).translate(val)
         df[column.lower() + "_gt"] = df[column].apply(lambda x: d[x])
-    elif translator == "deepl":
-        for val in unique_val:
-            # REMOVE API KEY AND SUBSTITUTE WITH ENVIRONMENT VARIABLE
-            d[val] = DeeplTranslator(api_key="38e53e96-d3f6-559d-f08b-163d92b711a8:fx", source=source, target=target, use_free_api=True).translate(val)
-        df[column.lower() + "_deepl"] = df[column].apply(lambda x: d[x])
     else:
-        # CHANGE THIS FOR ASSERTION ERROR AT THE BEGGINING OF THE FUNCTION
-        return "Wrong translator name. Use 'google' or 'deepl'."
+        for val in unique_val:
+            d[val] = DeeplTranslator(api_key=deepl_key, source=source,
+                                     target=target, use_free_api=True).translate(val)
+        df[column.lower() + "_deepl"] = df[column].apply(lambda x: d[x])
+
+def clean_column(df, column):
+    """
+    Turn string columns to lowercase and remove any special symbols.
+
+    Inputs:
+        df (DataFrame): dataframe with columns we want to clean
+        column (str): column we want to clean from dataframe.
+
+    Return: None. It does the change in place in the input dataframe.
+    """
+    df[column] = df[column].str.lower()
+    # df[column] = df[column].str.strip(PUNCTUATION)
