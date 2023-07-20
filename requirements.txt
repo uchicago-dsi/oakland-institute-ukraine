@@ -12,3 +12,4 @@ matplotlib~=3.7.1
 
 # cluster specific
 submitit~=1.4
+notebook==7.0.0
