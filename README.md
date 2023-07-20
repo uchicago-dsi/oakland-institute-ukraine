@@ -25,7 +25,7 @@ This setup should only have to be run once per machine you run it on.
 
 
 ### Directory Structure
-
+```sh
 ├── README.md
 ├── .gitignore
 ├── Dockerfile
@@ -47,7 +47,7 @@ This setup should only have to be run once per machine you run it on.
 │   └── output images, tables, etc.
 └── documentation/
     └── README.md
-
+```
 
 
 
