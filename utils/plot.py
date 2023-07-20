@@ -40,7 +40,7 @@ def cargo_grouping(df, group, other_cols, sort, asc_bool, new_name = None):
         return grouped.sort_values(by=sort, ascending=asc_bool)
 
     
-def plot_line(x_axis, y_axis, line_labels, graph_title, x_label, y_label):
+def plot_line(x_axis, y_axis, line_labels, graph_title, x_label, y_label, save_fig=True):
     """
     Plot line chart
 
@@ -53,6 +53,8 @@ def plot_line(x_axis, y_axis, line_labels, graph_title, x_label, y_label):
         graph_title (str): title for line chart
         x_label (str): title for the x axis
         y_label (str): title for the y axis
+        save_fig (bool): boolean that states wheter or not to save figure in
+            "output" directory.
     """
     fig, ax = plt.subplots(figsize=(12, 6))
 
@@ -68,9 +70,10 @@ def plot_line(x_axis, y_axis, line_labels, graph_title, x_label, y_label):
     plt.ylabel(y_label)
     plt.legend()
 
-    plt.savefig("output/" + standard_name(graph_title) + ".png")
+    if save_fig:
+        plt.savefig("output/" + standard_name(graph_title) + ".png")
 
-def plot_crops(crop, df_1, df_2):
+def plot_crops(crop, df_1, df_2, save_fig=True):
     """
     Plot line chart with crops exports for one company and the total BSGI
         exports
@@ -79,6 +82,8 @@ def plot_crops(crop, df_1, df_2):
         crop (str): name of crop that we want to plot
         df_1 (DataFrame): dataset to use for first line
         df_2 (DataFrame): dataset to use for second line
+        save_fig (bool): boolean that states wheter or not to save figure in
+            "output" directory.
     """
 
     crop_kernel = df_1.loc[df_1.loc[:, crop] == True]
@@ -93,4 +98,4 @@ def plot_crops(crop, df_1, df_2):
     # Plot together
     final = kernel_g.merge(outbound_g, on="date", suffixes=("_kernel", "_bsgi"))
 
-    plot_line(final["date"], [final["weight_ton_kernel"], final["weight_ton_bsgi"]], ["Kernel", "Black Sea Grain Initiative"], "BSGI and Kernel volume of {} exports".format(crop), "Export date (m-yy)", "{} exported (tons)".format(crop))
+    plot_line(final["date"], [final["weight_ton_kernel"], final["weight_ton_bsgi"]], ["Kernel", "Black Sea Grain Initiative"], "BSGI and Kernel volume of {} exports".format(crop), "Export date (m-yy)", "{} exported (tons)".format(crop), save_fig)
