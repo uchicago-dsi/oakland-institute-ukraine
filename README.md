@@ -37,10 +37,6 @@ This setup should only have to be run once per machine you run it on.
 ├── __init__.py
 ├── app.py
 ├── requirements.txt
-├── data/
-│   ├── README.md
-│   ├── land_matrix
-│   └── ukraine_regional_data
 ├── notebooks/
 │   ├── README.md
 │   ├── __init__.py
