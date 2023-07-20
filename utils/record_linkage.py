@@ -5,7 +5,7 @@
 # DSI
 
 import recordlinkage
-from .clean_data import PRODUCTS_VAL
+from .clean_data import PRODUCTS_VAL, translate_column, clean_column
 
 
 def find_matches(df_a, df_b, exact_vars= None, string_vars=None,
@@ -48,7 +48,6 @@ def find_matches(df_a, df_b, exact_vars= None, string_vars=None,
     matches = features[features.sum(axis=1) > 1]
     matches = matches.reset_index()
     print("Number of matches: ",len(matches))
-    print("Matches: ", matches)
 
     return matches
 
@@ -88,10 +87,11 @@ def record_linkage(df_ig, df_bsgi, crop, exact_vars= None, string_vars=None,
     # matches with the BSGI dataset
     crop_ig = crop_ig.loc[(crop_ig.loc[:, crop] == True) &
                           (crop_ig.loc[:, "n_products"] == 1)]
-    crop_bsgi = df_bsgi.loc[df_bsgi.loc[:, "product_std_gt"] == "sunflower"]
-    print("Hello this is a test")
-    print("crop_ig:\n", crop_ig)
-    print("crop_bsgi:\n", crop_bsgi)
+    crop_bsgi = df_bsgi.loc[df_bsgi.loc[:, "product_std"] == "sunflower"]
+
+    translate_column(crop_bsgi, "country", "google", "en", "uk")
+    crop_bsgi = crop_bsgi.rename(columns={"country": "country_en", "country_gt": "country"})
+    clean_column(crop_bsgi, "country")
 
     # Then we group the IG data by export date and country of destination because
     # their data is more granular than the BSGI data.
@@ -111,5 +111,4 @@ def record_linkage(df_ig, df_bsgi, crop, exact_vars= None, string_vars=None,
     full_unique = unique.merge(crop_ig, left_on='df_ig', right_index=True)
     full_unique = full_unique.merge(crop_bsgi, left_on='df_bsgi', right_index=True)
     
-    print("Hello this is a test")
     return full_unique
