@@ -1,7 +1,7 @@
 # Name: Josemaria Macedo Carrillo
 # Title: Record linkage functions
 # Created: 07/14/23
-# Last modified: 07/18/23
+# Last modified: 07/20/23
 # DSI
 
 import recordlinkage
