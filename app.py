@@ -14,7 +14,7 @@ pd.set_option('display.float_format', lambda x: '%.4f' % x)
 
 # Import clean data
 ig = get_data("ig_kernel_10000.csv", "ig")
-bsgi = get_data("bsgi_outbound_shipments.csv", "bsgi")
+bsgi = get_data("bsgi_outbound.csv", "bsgi")
 
 # Create graph image outputs and save them in "output" directory
 # Graph 1. Total volume of exports from Import Genius and BSGI
