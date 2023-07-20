@@ -21,13 +21,12 @@ def import_data(file_name, source):
     """
 
     current_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-    
+    path = os.path.join(current_dir, "data/", file_name)
+
     if source == "ig":
-        path = os.path.join(current_dir, "data/import_genius", file_name)
         df = pd.read_csv(path, parse_dates=["EXPORT DATE"])
     
     else:
-        path = os.path.join(current_dir, "data/", file_name)
         df = pd.read_csv(path, thousands=",", parse_dates=["Departure date"])
     
     return df
