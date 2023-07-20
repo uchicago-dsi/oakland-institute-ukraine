@@ -31,6 +31,9 @@ This setup should only have to be run once per machine you run it on.
 ├── README.md
 ├── .gitignore
 ├── Dockerfile
+├── __init__.py
+├── app.py
+├── requirements.txt
 ├── data/
 │   ├── README.md
 │   ├── land_matrix
@@ -53,7 +56,3 @@ This setup should only have to be run once per machine you run it on.
 └── documentation/
     └── README.md
 ```
-
-
-
-
