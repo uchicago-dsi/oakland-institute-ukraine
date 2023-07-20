@@ -25,26 +25,31 @@ This setup should only have to be run once per machine you run it on.
 
 
 ### Directory Structure
+
 ```sh
+.
 ├── README.md
 ├── .gitignore
 ├── Dockerfile
+├── data/
+│   ├── README.md
+│   ├── land_matrix
+│   └── ukraine_regional_data
 ├── notebooks/
 │   ├── README.md
-    ├── __init__.py
-    ├── export_data.ipynb
-    ├── land_data.ipynb
+│   ├── __init__.py
+│   ├── export_data.ipynb
+│   ├── land_data.ipynb
 │   └── un_data_exploration.ipynb
+├── output/
+│   └── README.md
 ├── utils/
 │   ├── README.md
 │   ├── __init__.py
-│   └── python utility files
-├── data/
-│   ├── README.md (or SOURCES.md)
-│   └── Data files
-├── output/
-│   ├── README.md
-│   └── output images, tables, etc.
+│   ├── clean_data.py
+│   ├── get_data.py
+│   ├── plot.py
+│   └── record_linkage.py
 └── documentation/
     └── README.md
 ```
