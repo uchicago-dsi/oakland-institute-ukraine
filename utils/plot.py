@@ -71,8 +71,7 @@ def plot_line(x_axis, y_axis, line_labels, graph_title, x_label, y_label, save_f
     plt.legend()
 
     if save_fig:
-        # plt.savefig("output/" + standard_name(graph_title) + ".png")
-        plt.savefig("test_docker.png")
+        plt.savefig("app/output/" + standard_name(graph_title) + ".png")
 
 def plot_crops(crop, df_1, df_2, save_fig=True):
     """
