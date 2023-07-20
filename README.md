@@ -23,7 +23,7 @@ This setup should only have to be run once per machine you run it on.
    ```sh
    /path/to/output
    ```
-   is the "path" to the "output directory in your local machine.
+   is the "path" to the "output" directory in your local machine.
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 
