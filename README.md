@@ -4,9 +4,13 @@ Large amounts of Ukraine’s arable land are controlled by a few agribusinesses.
 
 ### Installation
 
+Software Setup
+This setup should only have to be run once per machine you run it on.
+
+Install Docker. The project is designed to run in a Docker container. Therefore, the only prerequisite is Docker: [Get Docker](https://docs.docker.com/get-docker/)
 1. Clone the repo
    ```sh
-   git clone [https://github.com/uchicago-dsi/oakland-institute-ukraine](https://github.com/uchicago-dsi/oakland-institute-ukraine.git)
+   git clone [https://github.com/uchicago-dsi/oakland-institute-ukraine.git](https://github.com/uchicago-dsi/oakland-institute-ukraine.git)
    ```
 3. Install NPM packages
    ```sh
