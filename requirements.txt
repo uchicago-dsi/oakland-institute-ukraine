@@ -9,6 +9,7 @@ pandas~=1.4
 deep_translator~=1.11.4
 recordlinkage~=0.14
 matplotlib~=3.7.1
+openpyxl~=3.1.2
 
 # cluster specific
 submitit~=1.4
