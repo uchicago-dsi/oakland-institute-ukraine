@@ -52,8 +52,8 @@ def rename_columns(df, source):
     
     Inputs:
         df (DataFrame): dataset where we want to rename columns.
-        source (str): data source, either "ig" (Import Genius) or "bsgi" (Black
-            Sea Grain Initiative).
+        source (str): data source, either "ig" (Import Genius), "bsgi" (Black
+            Sea Grain Initiative) or "panjiva".
     
     Returns (DataFrame): dataframe with new column names.
     """
@@ -66,11 +66,17 @@ def rename_columns(df, source):
     df = df.rename(columns=d)
 
     if source == "ig":
-        df = df.rename(columns={"export_date": "date", "destination_country": "country"})
-    else:
+        df = df.rename(columns={"export_date": "date",
+                                "destination_country": "country"})
+    
+    elif source == "bsgi":
         df = df.rename(columns={"departure_date": "date",
                                 "metric_tons": "weight_ton",
                                 "commodity": "product"})
+    
+    elif source == "panjiva":
+        df = df.rename(columns={"shipment_destination": "country",
+                                "goods_shipped": "product"})
 
     return df
 
@@ -104,25 +110,22 @@ def create_columns(df, source):
     
     Returns: None. Changes to dataframe are done in place in input dataframe.
     """
-    assert source == "ig" or source == "bsgi", "Wrong data source Error: source\
-                                                must be either 'ig' or 'bsgi'."
-    
     df["year"] = df["date"].dt.year
     df["month"] = df["date"].dt.month
     
     if source == "ig":
         df["weight_ton"] = df["weight_kg"] / 1000
         product_std = set(PRODUCTS_VAL)
-        
         for product in product_std:
             product_uk = GoogleTranslator("en", "uk").translate(product)
             df[product] = df["product"].apply(lambda x: True if product_uk in x.lower() else False)
 
-    else:
+    elif source == "bsgi":
         d = create_crop_dict(df)
-        df["year"] = df["date"].dt.year
-        df["month"] = df["date"].dt.month
         df["product_std"] = df["product"].apply(lambda x: d[x])
+
+    elif source == "panjiva":
+        df["weight_ton"] = df["weight_kg"] / 1000
 
 
 def translate_column(df, column, translator, source="uk", target="en"):
@@ -171,4 +174,3 @@ def clean_column(df, column):
     Return: None. It does the change in place in the input dataframe.
     """
     df[column] = df[column].str.lower()
-    # df[column] = df[column].str.strip(PUNCTUATION)
