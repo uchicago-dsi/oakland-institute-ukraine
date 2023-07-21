@@ -126,6 +126,9 @@ def create_columns(df, source):
 
     elif source == "panjiva":
         df["weight_ton"] = df["weight_kg"] / 1000
+        product_std = set(PRODUCTS_VAL)
+        for product in product_std:
+            df[product] = df["product"].apply(lambda x: True if product in x.lower() else False)
 
 
 def translate_column(df, column, translator, source="uk", target="en"):
