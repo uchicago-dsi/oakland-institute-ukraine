@@ -51,7 +51,7 @@ def find_matches(df_a, df_b, exact_vars= None, string_vars=None,
 
     return matches
 
-def record_linkage(df_ig, df_bsgi, crop, exact_vars= None, string_vars=None,
+def rl_ig_bsgi(df_ig, df_bsgi, crop, exact_vars= None, string_vars=None,
                    block_vars=None):
     """
     Merge two dataframes based on different variables.
@@ -112,3 +112,36 @@ def record_linkage(df_ig, df_bsgi, crop, exact_vars= None, string_vars=None,
     full_unique = full_unique.merge(crop_bsgi, left_on='df_bsgi', right_index=True)
     
     return full_unique
+
+# def record_linkage(df_1, df_2, source_1, source_2, crop, exact_vars= None, string_vars=None,
+#                    block_vars=None):
+    
+#     """
+#     Merge two dataframes based on different variables.
+
+#     Inputs:
+#         df_1 (DataFrame): first dataset
+#         df_2 (DataFrame): second dataset
+#         source_1 (str): first dataset's data source, either "ig" (Import Genius),
+#             "bsgi" (Black Sea Grain Initiative) or "panjiva".
+#         source_2 (str): data source, either "ig" (Import Genius), "bsgi" (Black
+#             Sea Grain Initiative) or "panjiva".
+#         crop (str): crop to match on
+#         exact_vars (lst): list of strings with variables names we want to match
+#             exactly. If empty, it's set to "None" by default
+#         string_vars (lst): list of strings with variables names we want to match
+#             by the Jaro Winkler distance rule. If empty, it's set to "None" by
+#             default
+#         block_vars (lst): list of strings with blocking variables names. If
+#             empty, it's set to "None" by default.
+
+#     Returns (DataFrame): dataframe with unique matches from both datasets based
+#         on specified variables.
+#     """
+#     assert source_1 != source_2, "Wrong data source Error: use 'record_linkage'\
+#         linkage to match datasets from different data sources."
+    
+#     if source_1 == "ig" and source_2 == "bsgi":
+#         rl_ig_bsgi(df_1, df_2, crop, exact_vars, string_vars,
+#                    block_vars)
+#     elif (source_1 == "bsgi" and source_2 == "ig"):
