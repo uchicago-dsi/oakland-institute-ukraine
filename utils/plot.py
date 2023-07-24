@@ -9,18 +9,20 @@ from .clean_data import standard_name
 
 def cargo_grouping(df, group, other_cols, sort, asc_bool, new_name = None):
     """
-    Create grouped dataframes for charts
+    Create grouped dataframes for charts.
 
     Inputs:
-        df(DataFrame): dataset to be used
-        group(lst): list of columns to group by
+        df (DataFrame): dataset to be used
+        group (lst): list of columns to group by
         other_cols(lst): list of columns that are going to be aggregated
-        sortby(lst): list of columns to sort dataframe by. If new_name is not
-            empty then the new column names should be used.
-        new_name(lst): optional paramater with list of new names for grouped
+        sort (lst): list of columns to sort dataframe by. If new_name is not
+            empty then the new column names should be used
+        asc_bool (bool): boolean stating wheter or not to sort data "ascending"
+            (True) or "descending" (False)
+        new_name (lst): optional paramater with list of new names for grouped
             dataframe. Default is "None".
 
-    Return(DataFrame): grouped dataframe for charts
+    Return(DataFrame): grouped dataframe for charts.
     """
     cols = other_cols[:]
     cols.extend(group)

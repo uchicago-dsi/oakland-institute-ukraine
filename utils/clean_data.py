@@ -116,9 +116,13 @@ def create_columns(df, source):
     if source == "ig":
         df["weight_ton"] = df["weight_kg"] / 1000
         product_std = set(PRODUCTS_VAL)
+        df["n_products"] = 0
         for product in product_std:
             product_uk = GoogleTranslator("en", "uk").translate(product)
             df[product] = df["product"].apply(lambda x: True if product_uk in x.lower() else False)
+            df["n_products"] += df[product]
+        translate_column(df, "country", "google", "en", "uk")
+
 
     elif source == "bsgi":
         d = create_crop_dict(df)
@@ -127,8 +131,10 @@ def create_columns(df, source):
     elif source == "panjiva":
         df["weight_ton"] = df["weight_kg"] / 1000
         product_std = set(PRODUCTS_VAL)
+        df["n_products"] = 0
         for product in product_std:
             df[product] = df["product"].apply(lambda x: True if product in x.lower() else False)
+            df["n_products"] += df[product]
 
 
 def translate_column(df, column, translator, source="uk", target="en"):

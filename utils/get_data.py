@@ -82,6 +82,10 @@ def get_data(source):
 
     if source == "bsgi":
         translate_column(df, "product_std", "google", "en", "uk")
+        translate_column(df, "country", "google", "en", "uk")
+        df = df.rename(columns={"country": "country_en",
+                                "country_gt": "country"})
+        clean_column(df, "country")
 
     return df
 

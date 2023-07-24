@@ -6,16 +6,38 @@
 
 import recordlinkage
 from .clean_data import PRODUCTS_VAL, translate_column, clean_column
+from .plot import cargo_grouping
 
 
-def find_matches(df_a, df_b, exact_vars= None, string_vars=None,
+def filter_crop(df, crop, source):
+    """
+    Filter dataframe by crop.
+    
+    Inputs:
+        df (DataFrame): dataset to filter
+        crop (str): crop to match on
+        source (str): dataset's data source, either "ig" (Import Genius),
+            "bsgi" (Black Sea Grain Initiative) or "panjiva".
+    
+    Return (DataFrame): filtered dataframe.
+    """
+    if source == "ig" or source == "panjiva":
+        crop = df.loc[(df.loc[:, crop] == True) &
+                          (df.loc[:, "n_products"] == 1)]
+    else:
+        crop = df.loc[df.loc[:, "product_std"] == crop]
+
+    return crop
+
+
+def find_matches(df_1, df_2, exact_vars= None, string_vars=None,
                  block_vars=None):
     """
-    Find most possible matches between two datasets based on different columns
+    Find all possible matches between two datasets based on different columns
 
     Inputs:
-        df_a (DataFrame): first dataset to match
-        df_b (DataFrame): second dataset to match
+        df_1 (DataFrame): first dataset to match
+        df_2 (DataFrame): second dataset to match
         exact_vars (lst): list of strings with variables names we want to match
             exactly. If empty, it's set to "None" by default
         string_vars (lst): list of strings with variables names we want to match
@@ -31,7 +53,7 @@ def find_matches(df_a, df_b, exact_vars= None, string_vars=None,
     indexer = recordlinkage.Index()
     for block in block_vars:
         indexer.block(block)
-    candidate_links = indexer.index(df_a, df_b)
+    candidate_links = indexer.index(df_1, df_2)
 
     # Comparison step
     compare_cl = recordlinkage.Compare()
@@ -42,7 +64,7 @@ def find_matches(df_a, df_b, exact_vars= None, string_vars=None,
         compare_cl.string(string, string, method="jarowinkler", threshold=0.9,
                                                                 label=string)
 
-    features = compare_cl.compute(candidate_links, df_a, df_b)
+    features = compare_cl.compute(candidate_links, df_1, df_2)
 
     # Classification step
     matches = features[features.sum(axis=1) > 1]
@@ -50,6 +72,40 @@ def find_matches(df_a, df_b, exact_vars= None, string_vars=None,
     print("Number of matches: ",len(matches))
 
     return matches
+
+
+def unique_matches(df_1, df_2, exact_vars= None, string_vars=None,
+                 block_vars=None):
+    """
+    Find unique matches between two datasets based on different columns.
+
+    Inputs:
+        df_1 (DataFrame): first dataset to match
+        df_2 (DataFrame): second dataset to match
+        exact_vars (lst): list of strings with variables names we want to match
+            exactly. If empty, it's set to "None" by default
+        string_vars (lst): list of strings with variables names we want to match
+            by the Jaro Winkler distance rule. If empty, it's set to "None" by
+            default
+        block_vars (lst): list of strings with blocking variables names. If
+            empty, it's set to "None" by default.
+
+    Returns (DataFrame): dataframe with unique matches from both datasets.
+    """
+    df_1.index.name = "df_1"
+    df_2.index.name = "df_2"
+
+    matches = find_matches(df_1, df_2, ["date"], ["country"], ["date"])
+    
+    # Create a unique matches index and filter the matches indexes by it to find
+    # unique matches
+    df_2_i = matches.groupby("df_2")["df_1"].nunique()
+    unique = matches[matches["df_2"].isin(df_2_i[df_2_i == 1].index)][["df_1", "df_2"]].reset_index(drop=True)
+
+    full_unique = unique.merge(df_1, left_on='df_1', right_index=True)
+    full_unique = full_unique.merge(df_2, left_on='df_2', right_index=True)
+
+    return full_unique
 
 def rl_ig_bsgi(df_ig, df_bsgi, crop, exact_vars= None, string_vars=None,
                    block_vars=None):
@@ -75,41 +131,44 @@ def rl_ig_bsgi(df_ig, df_bsgi, crop, exact_vars= None, string_vars=None,
     assert crop in product_std, "Wrong crop Error: crop must be in {crops}."\
                                         .format(crops = product_std)
     
-    # We create a variable that sums the number of products mentioned in the
-    # product name
-    crop_ig = df_ig.copy()
-    crop_ig["n_products"] = 0
+    # # We create a variable that sums the number of products mentioned in the
+    # # product name
+    # crop_ig = df_ig.copy()
+    # crop_ig["n_products"] = 0
 
-    for product in product_std:
-        crop_ig["n_products"] += crop_ig[product]
+    # for product in product_std:
+    #     crop_ig["n_products"] += crop_ig[product]
 
     # Filter rows that only have the specified crop so we get more unique
     # matches with the BSGI dataset
-    crop_ig = crop_ig.loc[(crop_ig.loc[:, crop] == True) &
-                          (crop_ig.loc[:, "n_products"] == 1)]
-    crop_bsgi = df_bsgi.loc[df_bsgi.loc[:, "product_std"] == "sunflower"]
+    
+    crop_ig = filter_crop(df_ig, crop, "ig")
+    crop_bsgi = filter_crop(df_bsgi, crop, "bsgi")
 
-    translate_column(crop_bsgi, "country", "google", "en", "uk")
-    crop_bsgi = crop_bsgi.rename(columns={"country": "country_en", "country_gt": "country"})
-    clean_column(crop_bsgi, "country")
+    # translate_column(crop_bsgi, "country", "google", "en", "uk")
+    # crop_bsgi = crop_bsgi.rename(columns={"country": "country_en", "country_gt": "country"})
+    # clean_column(crop_bsgi, "country")
 
     # Then we group the IG data by export date and country of destination because
     # their data is more granular than the BSGI data.
-    crop_ig = crop_ig[["date", "country", "weight_ton"]]\
-                            .groupby(["date", "country"]).sum().reset_index()
+    # crop_ig = crop_ig[["date", "country", "weight_ton"]]\
+    #                         .groupby(["date", "country"]).sum().reset_index()
+    crop_ig = cargo_grouping(crop_ig, ["date", "country"], ["weight_ton"],
+                             ["date", "country"], True)
 
-    crop_ig.index.name = "df_ig"
-    crop_bsgi.index.name = "df_bsgi"
+    # crop_ig.index.name = "df_ig"
+    # crop_bsgi.index.name = "df_bsgi"
 
-    matches = find_matches(crop_ig, crop_bsgi, ["date"], ["country"], ["date"])
+    # matches = find_matches(crop_ig, crop_bsgi, ["date"], ["country"], ["date"])
     
-    # Create a unique matches index and filter the matches indexes by it to find
-    # unique matches
-    bsgi_i = matches.groupby("df_bsgi")["df_ig"].nunique()
-    unique = matches[matches["df_bsgi"].isin(bsgi_i[bsgi_i == 1].index)][["df_ig", "df_bsgi"]].reset_index(drop=True)
+    # # Create a unique matches index and filter the matches indexes by it to find
+    # # unique matches
+    # bsgi_i = matches.groupby("df_bsgi")["df_ig"].nunique()
+    # unique = matches[matches["df_bsgi"].isin(bsgi_i[bsgi_i == 1].index)][["df_ig", "df_bsgi"]].reset_index(drop=True)
 
-    full_unique = unique.merge(crop_ig, left_on='df_ig', right_index=True)
-    full_unique = full_unique.merge(crop_bsgi, left_on='df_bsgi', right_index=True)
+    # full_unique = unique.merge(crop_ig, left_on='df_ig', right_index=True)
+    # full_unique = full_unique.merge(crop_bsgi, left_on='df_bsgi', right_index=True)
+    full_unique = unique_matches(crop_ig, crop_bsgi, ["date"], ["country"], ["date"])
     
     return full_unique
 
@@ -142,6 +201,5 @@ def rl_ig_bsgi(df_ig, df_bsgi, crop, exact_vars= None, string_vars=None,
 #         linkage to match datasets from different data sources."
     
 #     if source_1 == "ig" and source_2 == "bsgi":
-#         rl_ig_bsgi(df_1, df_2, crop, exact_vars, string_vars,
-#                    block_vars)
+        
 #     elif (source_1 == "bsgi" and source_2 == "ig"):
