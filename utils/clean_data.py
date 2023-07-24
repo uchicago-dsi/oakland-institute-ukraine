@@ -105,8 +105,8 @@ def create_columns(df, source):
     Inputs:
         df (DataFrame): dataframe, either from Import Genius or the Black Sea
             Grain Initiative datasets
-        source (str): data source, either "ig" (Import Genius) or "bsgi" (Black
-            Sea Grain Initiative).
+        source (str): data source, either "ig" (Import Genius), "bsgi" (Black
+            Sea Grain Initiative) or "panjiva".
     
     Returns: None. Changes to dataframe are done in place in input dataframe.
     """
