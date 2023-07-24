@@ -116,6 +116,8 @@ def create_columns(df, source):
     if source == "ig":
         df["weight_ton"] = df["weight_kg"] / 1000
         product_std = set(PRODUCTS_VAL)
+        # We create a variable that sums the number of products mentioned in the
+        # product name
         df["n_products"] = 0
         for product in product_std:
             product_uk = GoogleTranslator("en", "uk").translate(product)
