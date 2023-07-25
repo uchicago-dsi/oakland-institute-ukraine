@@ -6,6 +6,7 @@
 
 import matplotlib.pyplot as plt
 from .clean_data import standard_name
+import numpy as np
 
 def cargo_grouping(df, group, other_cols, sort, asc_bool, new_name = None):
     """
@@ -101,3 +102,45 @@ def plot_crops(crop, df_1, df_2, save_fig=True):
     final = kernel_g.merge(outbound_g, on="date", suffixes=("_kernel", "_bsgi"))
 
     plot_line(final["date"], [final["weight_ton_kernel"], final["weight_ton_bsgi"]], ["Kernel", "Black Sea Grain Initiative"], "BSGI and Kernel volume of {} exports".format(crop), "Export date (m-yy)", "{} exported (tons)".format(crop), save_fig)
+
+
+def label(percentage, data):
+    """
+    Create labels to pie wedges with absolute and percentage values. Reference: https://matplotlib.org/stable/gallery/pie_and_polar_charts/pie_and_donut_labels.html
+
+    Inputs:
+        percentage (float): percentage of the wedge calculated by the pie function
+        data (array or Series): values to be summed and get absolute total value
+    
+    Return (str): string with absolute and percentage values
+    """
+    absolute = int(np.round(percentage/100.*np.sum(data)))
+
+    return f"{absolute:d}\n({percentage:.1f}%)"
+
+def plot_pie(categories, values, category_title, graph_title):
+    """
+    Plot pie chart. Reference: https://matplotlib.org/stable/gallery/pie_and_polar_charts/pie_and_donut_labels.html
+
+    Inputs:
+        categories (array or Series): categories for the pie wedges
+        values (array or Series): values for the pie wedges
+        category_title (str): title for category section
+        graph_title (str): title for pie chart
+    """
+    fig, ax = plt.subplots(figsize=(6, 3), subplot_kw=dict(aspect="equal"))
+
+    wedges, texts, autotexts = ax.pie(values, autopct=lambda pct: label(pct, values),
+                                    textprops=dict(color="w"),
+                                    wedgeprops=dict(width=0.5), startangle=-40)
+
+    ax.legend(wedges, categories,
+            title=category_title,
+            loc="center left",
+            bbox_to_anchor=(1, 0, 0.5, 1))
+
+    plt.setp(autotexts, size=8, weight="bold")
+
+    ax.set_title(graph_title)
+
+    plt.show()
