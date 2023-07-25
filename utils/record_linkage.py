@@ -8,6 +8,19 @@ import recordlinkage
 from .clean_data import PRODUCTS_VAL, translate_column, clean_column
 from .plot import cargo_grouping
 
+def test_crop(crop):
+    """
+    Assert if a crop is in the standard crop categories.
+
+    Inputs:
+        crop (str): crop name
+    
+    Return: None. The assert function evaluates if statement is True. If False
+        it return error text.
+    """
+    product_std = set(PRODUCTS_VAL)
+    assert crop in product_std, "Wrong crop Error: crop must be in {crops}."\
+                                        .format(crops = product_std)
 
 def filter_crop(df, crop, source):
     """
@@ -26,7 +39,7 @@ def filter_crop(df, crop, source):
                           (df.loc[:, "n_products"] == 1)]
     else:
         crop = df.loc[df.loc[:, "product_std"] == crop]
-
+    
     return crop
 
 
@@ -65,9 +78,6 @@ def find_matches(df_1, df_2, exact_vars= None, string_vars=None,
                                                                 label=string)
 
     features = compare_cl.compute(candidate_links, df_1, df_2)
-    print("Country column DF 1:\n", df_1)
-    print("Country column DF 2:\n", df_2)
-    print("All possible matches:\n", features)
 
     # Classification step
     matches = features[features.sum(axis=1) > 1]
@@ -99,7 +109,6 @@ def unique_matches(df_1, df_2, exact_vars= None, string_vars=None,
     df_2.index.name = "df_2"
 
     matches = find_matches(df_1, df_2, ["date"], ["country"], ["date"])
-    print("Likely matches:\n", matches)
     
     # Create a unique matches index and filter the matches indexes by it to find
     # unique matches
@@ -131,21 +140,17 @@ def rl_ig_bsgi(df_ig, df_bsgi, crop, exact_vars= None, string_vars=None,
     Returns (DataFrame): dataframe with unique matches from both datasets based
         on specified variables.
     """
-    product_std = set(PRODUCTS_VAL)
-    assert crop in product_std, "Wrong crop Error: crop must be in {crops}."\
-                                        .format(crops = product_std)
+    test_crop(crop)
 
     # Filter rows that only have the specified crop so we get more unique
     # matches with the BSGI dataset
     crop_ig = filter_crop(df_ig, crop, "ig")
-    print("Panjiva filtered:\n", crop_ig[["date", "country", "product"]])
     crop_bsgi = filter_crop(df_bsgi, crop, "bsgi")
 
     # Then we group the IG data by export date and country of destination because
     # their data is more granular than the BSGI data.
     crop_ig = cargo_grouping(crop_ig, ["date", "country"], ["weight_ton"],
                              ["date", "country"], True)
-    print("Panjiva grouped:\n", crop_ig)
 
     full_unique = unique_matches(crop_ig, crop_bsgi, ["date"], ["country"], ["date"])
     
