@@ -144,3 +144,27 @@ def plot_pie(categories, values, category_title, graph_title):
     ax.set_title(graph_title)
 
     plt.show()
+
+def plot_horizontal(df, x_var, y_var, x_title, plot_title):
+    """
+    Plot a horizontal bar graph.
+
+    Inputs:
+        df (DataFrame): data we want to plot
+        x_var (str): variable we want to plot in horizontal axis
+        y_var (str): variable we want to plot in vertical axis
+        x_label (str): horizontal axis title
+        plot_title (str): plot title.
+    """
+    plt.rcdefaults()
+    fig, ax = plt.subplots()
+
+    y_labels = df.loc[:, y_var].unique()
+    y_pos = np.arange(df.loc[:, y_var].nunique())
+
+    # PENDING: PUT CARGO VALUES TO BARS AND SEPARATE COUNTRY NAMES AND CARGO VALUES MORE
+    ax.barh(y_pos, df.loc[:, x_var], align='center')
+    ax.set_yticks(y_pos, labels=y_labels)
+    ax.invert_yaxis()
+    ax.set_xlabel(x_title)
+    ax.set_title(plot_title)
