@@ -10,6 +10,7 @@ deep_translator~=1.11.4
 recordlinkage~=0.14
 matplotlib~=3.7.1
 openpyxl~=3.1.2
+descartes~=1.1.0
 
 # cluster specific
 submitit~=1.4
