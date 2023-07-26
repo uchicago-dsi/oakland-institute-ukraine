@@ -43,9 +43,13 @@ def compile_data(directory_name):
     
     Return (DataFrame): dataframe with compiled data
     """
+    path = os.path.join(CURRENT_DIR, "data", directory_name)
+    
+    if directory_name == "bsgi":
+        return import_data(os.path.join(path, "bsgi_outbound.csv"), directory_name)
+    
     file_formats = ["xlsx", "csv"]
     compiled_df = pd.DataFrame()
-    path = os.path.join(CURRENT_DIR, "data", directory_name)
 
     for file in os.listdir(path):
         if re.split("_|\\.", file)[-1] in file_formats:
@@ -71,8 +75,8 @@ def get_data(source):
     data_sources = ["ig", "bsgi", "panjiva"]
     assert source in data_sources, "Wrong data source Error: source must be\
                                     'ig', 'bsgi' or 'panjiva'."
-    if source != "bsgi":
-        df = compile_data(source)
+    
+    df = compile_data(source)
     df = rename_columns(df, source)
     create_columns(df, source)
     
@@ -86,6 +90,10 @@ def get_data(source):
         df = df.rename(columns={"country": "country_en",
                                 "country_gt": "country"})
         clean_column(df, "country")
+
+    elif source == "panjiva":
+        clean_column(df, "shipment_origin")
+        df = df.loc[df.loc[:, "shipment_origin"] == "ukraine"]
 
     return df
 

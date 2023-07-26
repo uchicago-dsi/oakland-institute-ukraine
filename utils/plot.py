@@ -72,6 +72,8 @@ def plot_line(x_axis, y_axis, line_labels, graph_title, x_label, y_label, save_f
     plt.xlabel(x_label)
     plt.ylabel(y_label)
     plt.legend()
+    spacing = 0.1
+    fig.subplots_adjust(bottom=spacing)
 
     if save_fig:
         plt.savefig("app/output/" + standard_name(graph_title) + ".png")
