@@ -71,8 +71,8 @@ def get_data(source):
     data_sources = ["ig", "bsgi", "panjiva"]
     assert source in data_sources, "Wrong data source Error: source must be\
                                     'ig', 'bsgi' or 'panjiva'."
-    
-    df = compile_data(source)
+    if source != "bsgi":
+        df = compile_data(source)
     df = rename_columns(df, source)
     create_columns(df, source)
     
