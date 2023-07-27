@@ -4,7 +4,6 @@ Large amounts of Ukraine’s arable land are controlled by a few agribusinesses.
 
 ### Installation
 
-Software Setup
 This setup should only have to be run once per machine you run it on.
 
 1. Install Docker. The project is designed to run in a Docker container. Therefore, the only prerequisite is Docker: [Get Docker](https://docs.docker.com/get-docker/)
@@ -17,22 +16,20 @@ This setup should only have to be run once per machine you run it on.
    ```sh
    cd oakland-institute-ukraine
    ```
-5. Create a ```/data``` directory and move the downloaded data files to the "/data" directory.
-5. Build the Docker image from the root project directory:
+5. Create a ```data``` directory and move the downloaded data files from step 2 to that directory.
+6. Build the Docker image from the root project directory:
    ```sh
    docker build -t ukraine .
    ```
-6. Run the Docker image:
+7. Run the Docker image:
    ```sh
    docker run -v $(current_abs_path):/notebooks --name notebooks-jupyter --rm -p 8888:8888 -t ukraine
    ```
    
-   Where
-   ```sh
-   $(current_abs_path)
-   ```
-   is the path to the repo directory in your local machine.
+   Where ```$(current_abs_path)``` is the path to the repo directory in your local machine.
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
+8. Copy and paste Jupyter server URL in your preferred browser.
+9. Go to the ```\notebooks``` directory and open each notebook.
 
 ### Data files
 
