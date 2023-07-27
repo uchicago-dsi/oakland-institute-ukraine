@@ -27,7 +27,6 @@ This setup should only have to be run once per machine you run it on.
    ```
    
    Where ```$(current_abs_path)``` is the path to the repo directory in your local machine.
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
 8. Copy and paste Jupyter server URL in your preferred browser.
 9. Go to the ```\notebooks``` directory and open each notebook.
 
