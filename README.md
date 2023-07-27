@@ -17,13 +17,21 @@ This setup should only have to be run once per machine you run it on.
    ```sh
    cd oakland-institute-ukraine
    ```
-5. Move the downloaded data files to the "/data" directory.
-5. Build the Docker image from the root project directory: docker build -t jmacedoc1/getting-started .
-6. Run the Docker image: docker run -v /path/to/output:/app/output jmacedoc1/ukraine. Where
+5. Create a ```/data``` directory and move the downloaded data files to the "/data" directory.
+5. Build the Docker image from the root project directory:
    ```sh
-   /path/to/output
+   docker build -t ukraine .
    ```
-   is the "path" to the "output" directory in your local machine.
+6. Run the Docker image:
+   ```sh
+   docker run -v $(current_abs_path):/notebooks --name notebooks-jupyter --rm -p 8888:8888 -t ukraine
+   ```
+   
+   Where
+   ```sh
+   $(current_abs_path)
+   ```
+   is the path to the repo directory in your local machine.
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 
