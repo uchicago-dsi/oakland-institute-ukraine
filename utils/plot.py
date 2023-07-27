@@ -1,7 +1,7 @@
 # Name: Josemaria Macedo Carrillo
 # Title: Plot functions
 # Created: 07/14/23
-# Last modified: 07/20/23
+# Last modified: 07/26/23
 # DSI
 
 import matplotlib.pyplot as plt
@@ -134,7 +134,11 @@ def plot_pie(categories, values, category_title, graph_title):
 
     wedges, texts, autotexts = ax.pie(values, autopct=lambda pct: label(pct, values),
                                     textprops=dict(color="w"),
-                                    wedgeprops=dict(width=0.5), startangle=-40)
+                                    wedgeprops=dict(width=0.5), startangle=-40,
+                                    pctdistance=1.35)
+    
+    for autotext in autotexts:
+        autotext.set_color('black')
 
     ax.legend(wedges, categories,
             title=category_title,

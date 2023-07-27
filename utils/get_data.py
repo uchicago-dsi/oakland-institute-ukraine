@@ -1,7 +1,7 @@
 # Name: Josemaria Macedo Carrillo
 # Title: Read data
 # Created: 07/18/23
-# Last modified: 07/19/23
+# Last modified: 07/26/23
 # DSI
 
 import os
