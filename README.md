@@ -1,6 +1,6 @@
 ## Ukraine Agricultural Exports
 
-Large amounts of Ukraine’s arable land are controlled by a few agribusinesses. Oakland Institute has been tracking consolidation of agricultural land as well as land reform policy in Ukraine. The goal of this application is to analyze Ukrainian agricultural exports data to see the activity of some of the companies identified in Oakland Institute's report over time.
+Large amounts of Ukraine’s arable land are controlled by a few agribusinesses. Oakland Institute has been tracking consolidation of agricultural land as well as land reform policy in Ukraine. The goal of this application is to analyze Ukrainian agricultural exports data to see the activity of some of the companies identified in Oakland Institute's report over time: [https://www.oaklandinstitute.org/war-theft-takeover-ukraine-agricultural-land](https://www.oaklandinstitute.org/war-theft-takeover-ukraine-agricultural-land)
 
 ### Installation
 
