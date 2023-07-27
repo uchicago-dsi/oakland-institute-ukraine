@@ -36,8 +36,7 @@ This setup should only have to be run once per machine you run it on.
 
 ```bsgi_destinations.csv```: Black Sea Grain Initiative dataset with volume of exports
 data ("total metric tons" column) grouped by country of destination ("Country" column).
-Data corresponds to three Black Sea ports: Odesa, Chornomorsk, Yuzhny/Pivdennyi.
-
+Data corresponds to three Black Sea ports: Odesa, Chornomorsk, Yuzhny/Pivdennyi.<br>
 ```bsgi_outbound.csv```: Black Sea Grain Initiative dataset with exports
 data disaggregated at the shipment level. Data corresponds to three Black Sea
 ports: Odesa, Chornomorsk, Yuzhny/Pivdennyi.
@@ -50,8 +49,7 @@ ports: Odesa, Chornomorsk, Yuzhny/Pivdennyi.
 ```/land_matrix```
 
 ```deals.csv```: Land Matrix data on land deals around the world at the "Company" level.
-It also has information about the "Target country" of the land deal.
-
+It also has information about the "Target country" of the land deal.<br>
 ```locations.csv```: Land Matrix data on land deals locations with coordinates ("Point" column).
 It seems that locations are at disaggregated at least at the "hromada" level (municipal level).
 
