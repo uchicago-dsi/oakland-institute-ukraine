@@ -27,7 +27,7 @@ This setup should only have to be run once per machine you run it on.
    ```
    
    Where ```$(current_abs_path)``` is the path to the repo directory in your local machine.
-8. Copy and paste Jupyter server URL in your preferred browser.
+8. Copy and paste the Jupyter server URL in your preferred web browser.
 9. Go to the ```\notebooks``` directory and open each notebook.
 
 ### Data files
