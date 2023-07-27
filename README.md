@@ -34,23 +34,23 @@ This setup should only have to be run once per machine you run it on.
 
 ```/bsgi```
 
-bsgi_destinations.csv: Black Sea Grain Initiative dataset with volume of exports
+```bsgi_destinations.csv```: Black Sea Grain Initiative dataset with volume of exports
 data ("total metric tons" column) grouped by country of destination ("Country" column).
-Data corresponds to three Black Sea ports: Odesa, Chornomorsk, Yuzhny/Pivdennyi.
-bsgi_outbound.csv: Black Sea Grain Initiative dataset with exports
+Data corresponds to three Black Sea ports: Odesa, Chornomorsk, Yuzhny/Pivdennyi.<br>
+```bsgi_outbound.csv```: Black Sea Grain Initiative dataset with exports
 data disaggregated at the shipment level. Data corresponds to three Black Sea
 ports: Odesa, Chornomorsk, Yuzhny/Pivdennyi.
 
 ```/ig```
 
-ig_kernel_10000.csv: Import Genius data containing information on shipment exports for Kernel
+```ig_kernel_10000.csv```: Import Genius data containing information on shipment exports for Kernel
 (company in top 10 firms controlling agricultural land in Ukraine).
 
 ```/land_matrix```
 
-deals.csv: Land Matrix data on land deals around the world at the "Company" level.
-It also has information about the "Target country" of the land deal.
-locations.csv: Land Matrix data on land deals locations with coordinates ("Point" column).
+```deals.csv```: Land Matrix data on land deals around the world at the "Company" level.
+It also has information about the "Target country" of the land deal.<br>
+```locations.csv```: Land Matrix data on land deals locations with coordinates ("Point" column).
 It seems that locations are at disaggregated at least at the "hromada" level (municipal level).
 
 ```/panjiva```
@@ -61,7 +61,7 @@ syntax "panjiva_[companya_name].xlsx".
 
 ```/regional_maps```
 
-ukr_admbnda_adm3_sspe_20230201.shp: shape file from The Humanitarian Data Exchange
+```ukr_admbnda_adm3_sspe_20230201.shp```: shape file from The Humanitarian Data Exchange
 project with Ukrainian administrative divisions at the 3rd level of disaggregation.
 We believe it is the "hromada" or municipality level but we cannot confirm from
 the available documentation: [https://data.humdata.org/dataset/cod-ab-ukr](https://data.humdata.org/dataset/cod-ab-ukr)
