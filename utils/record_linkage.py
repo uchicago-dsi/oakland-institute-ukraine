@@ -150,7 +150,7 @@ def rl_ig_bsgi(df_ig, df_bsgi, crop, exact_vars= None, string_vars=None,
     # Then we group the IG data by export date and country of destination because
     # their data is more granular than the BSGI data.
     crop_ig = cargo_grouping(crop_ig, ["date", "country"], ["weight_ton"],
-                             ["date", "country"], True)
+                             ["date", "country"], True, {"weight_ton":"sum"})
 
     full_unique = unique_matches(crop_ig, crop_bsgi, ["date"], ["country"], ["date"])
     
