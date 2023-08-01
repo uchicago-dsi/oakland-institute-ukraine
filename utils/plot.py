@@ -8,7 +8,8 @@ import matplotlib.pyplot as plt
 from .clean_data import standard_name
 import numpy as np
 
-def cargo_grouping(df, group, other_cols, sort, asc_bool, new_name = None):
+def cargo_grouping(df, group, other_cols, sort, asc_bool, agg_dict,
+                   new_name = None):
     """
     Create grouped dataframes for charts.
 
@@ -20,22 +21,34 @@ def cargo_grouping(df, group, other_cols, sort, asc_bool, new_name = None):
             empty then the new column names should be used
         asc_bool (bool): boolean stating wheter or not to sort data "ascending"
             (True) or "descending" (False)
+        agg_dict (dict): dict with aggregation functions we want to apply to
+            data. If we want to aggregate a column by more than one function
+            we put the functions as a list. Example: {"var": ["count", "sum"]}.
         new_name (lst): optional paramater with list of new names for grouped
             dataframe. Default is "None".
 
     Return(DataFrame): grouped dataframe for charts.
     """
+    assert isinstance(agg_dict, dict), "Argument Error: Pass a dictionary to\
+    'agg_dict' with columns to aggregate as keys and aggretate functions as values."
+
     cols = other_cols[:]
     cols.extend(group)
-    df_g = df.loc[:, cols].groupby(group)
+    df_g = df.loc[:, cols].groupby(group, as_index=False)
 
     if new_name is not None:
         col_dict = {}
         for i, col in enumerate(other_cols):
             col_dict[col] = new_name[i]
-        grouped = df_g.sum().reset_index().rename(columns = col_dict) # PENDING: change this later to include any kind of aggregation
+        # grouped = df_g.sum().reset_index().rename(columns = col_dict) # PENDING: change this later to include any kind of aggregation
+        grouped = df_g.agg(agg_dict).rename(columns = col_dict) # PENDING: change this later to include any kind of aggregation
+
     else:
-        grouped = df_g.sum().reset_index()
+        # grouped = df_g.sum().reset_index()
+        # grouped = df_g.agg(agg_lst).reset_index()
+        grouped = df_g.agg(agg_dict)
+    
+    grouped.columns = list(map(''.join, grouped.columns.values))
     
     if sort is None:
         return grouped
@@ -159,7 +172,7 @@ def plot_horizontal(df, x_var, y_var, x_title, plot_title):
         df (DataFrame): data we want to plot
         x_var (str): variable we want to plot in horizontal axis
         y_var (str): variable we want to plot in vertical axis
-        x_label (str): horizontal axis title
+        x_title (str): horizontal axis title
         plot_title (str): plot title.
     """
     plt.rcdefaults()
@@ -174,3 +187,33 @@ def plot_horizontal(df, x_var, y_var, x_title, plot_title):
     ax.invert_yaxis()
     ax.set_xlabel(x_title)
     ax.set_title(plot_title)
+
+def plot_bar(x_var, y_var, x_title, y_title, plot_title):
+    """
+    Plot a vertical bar graph.
+
+    Inputs:
+        df (DataFrame): data we want to plot
+        x_var (str): variable we want to plot in horizontal axis
+        y_var (str): variable we want to plot in vertical axis
+        x_title (str): horizontal axis title
+        y_title (str): horizontal axis title
+        plot_title (str): plot title.
+    """
+
+    fig, ax = plt.subplots()
+
+    for i, na_value in enumerate(y_var):
+        rects = ax.bar(x_var[i], na_value, label = na_value)
+        ax.bar_label(rects, padding=3)
+        
+    ax.set_xlabel(x_title)
+    ax.set_ylabel(y_title)
+    ax.set_title(plot_title)
+
+    spacing = 0.1
+    fig.subplots_adjust(bottom=spacing)
+
+    plt.xticks(rotation=90)
+    plt.tick_params(axis='x', which='major', labelsize=10)
+    plt.show()
