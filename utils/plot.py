@@ -105,12 +105,12 @@ def plot_crops(crop, df_1, df_2, save_fig=True):
     """
 
     crop_kernel = df_1.loc[df_1.loc[:, crop] == True]
-    kernel_g = cargo_grouping(crop_kernel, ["year", "month"], ["weight_ton"], ["year", "month"], True)
+    kernel_g = cargo_grouping(crop_kernel, ["year", "month"], ["weight_ton"], ["year", "month"], True, {"weight_ton": "sum"})
     kernel_g["date"] = kernel_g["month"].astype(str) + "/" + kernel_g["year"].astype(str)
 
     # BSGI data
     crop_bsgi = df_2.loc[df_2.loc[:, "product_std"] == crop]
-    outbound_g = cargo_grouping(crop_bsgi, ["year", "month"], ["weight_ton"], ["year", "month"], True)
+    outbound_g = cargo_grouping(crop_bsgi, ["year", "month"], ["weight_ton"], ["year", "month"], True, {"weight_ton": "sum"})
     outbound_g["date"] = outbound_g["month"].astype(str) + "/" + outbound_g["year"].astype(str)
 
     # Plot together
