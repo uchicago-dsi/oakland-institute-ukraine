@@ -40,12 +40,9 @@ def cargo_grouping(df, group, other_cols, sort, asc_bool, agg_dict,
         col_dict = {}
         for i, col in enumerate(other_cols):
             col_dict[col] = new_name[i]
-        # grouped = df_g.sum().reset_index().rename(columns = col_dict) # PENDING: change this later to include any kind of aggregation
-        grouped = df_g.agg(agg_dict).rename(columns = col_dict) # PENDING: change this later to include any kind of aggregation
+        grouped = df_g.agg(agg_dict).rename(columns = col_dict)
 
     else:
-        # grouped = df_g.sum().reset_index()
-        # grouped = df_g.agg(agg_lst).reset_index()
         grouped = df_g.agg(agg_dict)
     
     grouped.columns = list(map(''.join, grouped.columns.values))
