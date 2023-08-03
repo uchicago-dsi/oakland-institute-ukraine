@@ -120,10 +120,51 @@ def unique_matches(df_1, df_2, exact_vars= None, string_vars=None,
 
     return full_unique
 
+def record_linkage(df_1, df_2, group, other_cols, sort, asc_bool, agg_dict,
+                   exact_vars= None, string_vars=None, block_vars=None,
+                   new_name = None):
+    """
+    Match dataframes based on different variables.
+
+    Inputs:
+        df_1 (DataFrame): first dataset we want to aggregate
+        df_2 (DataFrame): second dataset
+        group (lst): list of columns to group by
+        other_cols(lst): list of columns that are going to be aggregated
+        sort (lst): list of columns to sort dataframe by. If new_name is not
+            empty then the new column names should be used
+        asc_bool (bool): boolean stating wheter or not to sort data "ascending"
+            (True) or "descending" (False)
+        agg_dict (dict): dict with aggregation functions we want to apply to
+            data. If we want to aggregate a column by more than one function
+            we put the functions as a list. Example: {"var": ["count", "sum"]}.
+        new_name (lst): optional paramater with list of new names for grouped
+            dataframe. Default is "None".
+        exact_vars (lst): list of strings with variables names we want to match
+            exactly. If empty, it's set to "None" by default
+        string_vars (lst): list of strings with variables names we want to match
+            by the Jaro Winkler distance rule. If empty, it's set to "None" by
+            default
+        block_vars (lst): list of strings with blocking variables names. If
+            empty, it's set to "None" by default.
+
+    Returns (DataFrame): dataframe with unique matches from both datasets based
+        on specified variables.
+    """
+
+    df_1_g = cargo_grouping(df_1, group, other_cols, sort, True, agg_dict)
+    print("IG grouped data:\n", df_1_g)
+    print("BSGI data:\n", df_2)
+
+    full_unique = unique_matches(df_1_g, df_2, exact_vars, string_vars, block_vars)
+
+    return full_unique
+
 def rl_ig_bsgi(df_ig, df_bsgi, crop, exact_vars= None, string_vars=None,
                    block_vars=None):
     """
-    Merge two dataframes based on different variables.
+    Merge two dataframes based on different variables. The dataframes are matched
+    also based on a specific crop.
 
     Inputs:
         df_ig (DataFrame): Import Genius dataset
@@ -149,41 +190,13 @@ def rl_ig_bsgi(df_ig, df_bsgi, crop, exact_vars= None, string_vars=None,
 
     # Then we group the IG data by export date and country of destination because
     # their data is more granular than the BSGI data.
-    crop_ig = cargo_grouping(crop_ig, ["date", "country"], ["weight_ton"],
-                             ["date", "country"], True, {"weight_ton":"sum"})
+    # crop_ig = cargo_grouping(crop_ig, ["date", "country"], ["weight_ton"],
+    #                          ["date", "country"], True, {"weight_ton":"sum"})
 
-    full_unique = unique_matches(crop_ig, crop_bsgi, ["date"], ["country"], ["date"])
+    # full_unique = unique_matches(crop_ig, crop_bsgi, ["date"], ["country"], ["date"])
+    full_unique = record_linkage(crop_ig, crop_bsgi, ["date", "country"],
+                                 ["weight_ton"],  ["date", "country"], True,
+                                 {"weight_ton":"sum"}, ["date"], ["country"],
+                                 ["date"])
     
     return full_unique
-
-# def record_linkage(df_1, df_2, source_1, source_2, crop, exact_vars= None, string_vars=None,
-#                    block_vars=None):
-    
-#     """
-#     Merge two dataframes based on different variables.
-
-#     Inputs:
-#         df_1 (DataFrame): first dataset
-#         df_2 (DataFrame): second dataset
-#         source_1 (str): first dataset's data source, either "ig" (Import Genius),
-#             "bsgi" (Black Sea Grain Initiative) or "panjiva".
-#         source_2 (str): data source, either "ig" (Import Genius), "bsgi" (Black
-#             Sea Grain Initiative) or "panjiva".
-#         crop (str): crop to match on
-#         exact_vars (lst): list of strings with variables names we want to match
-#             exactly. If empty, it's set to "None" by default
-#         string_vars (lst): list of strings with variables names we want to match
-#             by the Jaro Winkler distance rule. If empty, it's set to "None" by
-#             default
-#         block_vars (lst): list of strings with blocking variables names. If
-#             empty, it's set to "None" by default.
-
-#     Returns (DataFrame): dataframe with unique matches from both datasets based
-#         on specified variables.
-#     """
-#     assert source_1 != source_2, "Wrong data source Error: use 'record_linkage'\
-#         linkage to match datasets from different data sources."
-    
-#     if source_1 == "ig" and source_2 == "bsgi":
-        
-#     elif (source_1 == "bsgi" and source_2 == "ig"):
