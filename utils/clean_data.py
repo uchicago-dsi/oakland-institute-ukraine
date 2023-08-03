@@ -14,6 +14,24 @@ PRODUCTS_VAL = ["corn", "soya", "sunflower", "wheat", "sunflower", "barley",
                 "peas", "rapeseed", "sunflower", "vegetable", "soya", "canola",
                 "rapeseed", "sunflower", "mixed", "wheat", "sugar beet"]
 
+CROP_DICT =  {'Rapeseed': 'rapeseed', 'Corn': 'corn',
+              'Sunflower meal': 'sunflower', 'Wheat': 'wheat',
+              'Sunflower oil': 'sunflower', 'Soya beans': 'soya',
+              'Barley': 'barley', 'Peas': 'peas',
+              'Sunflower seed': 'sunflower', 'Vegetable oil': 'vegetable',
+              'Soya oil': 'soya', 'Canola': 'canola',
+              'Rapeseed meal': 'rapeseed', 'Sunflower pellets': 'sunflower',
+              'Mixed': 'mixed', 'Wheat bran pellets': 'wheat',
+              'Sugar beet pellets': 'sugar beet'}
+
+HS_DICT = {"Rapeseed": "1205", "Rapeseed meal": "2306", "Canola": "1514",
+           "Corn": "1005", "Sunflower oil": "1512", "Sunflower seed": "1206",
+           "Sunflower pellets": "2306", "Sunflower meal": "2306",
+           "Wheat": "1001", "Soya beans": "1201", "Soya oil": "1507",
+           "Barley": "1003", "Peas": "0713", "Vegetable oil": "1516",
+           "Wheat bran pellets": "2302", "Mixed": "",
+           "Sugar beet pellets": "2302"}
+
 
 def keep_chr(ch):
     """
@@ -95,7 +113,7 @@ def create_crop_dict(df):
     d = {}
     for i, product in enumerate(products):
         d[product] = PRODUCTS_VAL[i]
-    
+ 
     return d
 
 def create_columns(df, source):
@@ -123,12 +141,11 @@ def create_columns(df, source):
             product_uk = GoogleTranslator("en", "uk").translate(product)
             df[product] = df["product"].apply(lambda x: True if product_uk in x.lower() else False)
             df["n_products"] += df[product]
-        translate_column(df, "country", "google", "en", "uk")
-
+        # translate_column(df, "country", "google", "en", "uk")
 
     elif source == "bsgi":
-        d = create_crop_dict(df)
-        df["product_std"] = df["product"].apply(lambda x: d[x])
+        df["product_std"] = df["product"].apply(lambda x: CROP_DICT[x])
+        df["hs_code"] = df["product"].apply(lambda x: HS_DICT[x])
 
     elif source == "panjiva":
         df["weight_ton"] = df["weight_kg"] / 1000

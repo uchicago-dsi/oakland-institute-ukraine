@@ -25,6 +25,10 @@ def import_data(path, source):
 
     if source == "ig":
         df = pd.read_csv(path, parse_dates=["EXPORT DATE"], encoding = "utf-8")
+        # Add 0 to HS Codes that have 9 digits because apparently Import Genius
+        # cuts the 0 at the beggining 
+        df["HS CODE"] = df["HS CODE"].astype(str)
+        df["HS CODE"] = df["HS CODE"].apply(lambda x: "0" + x if len(x) == 9 else x)
     
     elif source == "bsgi":
         df = pd.read_csv(path, thousands=",", parse_dates=["Departure date"])
@@ -96,5 +100,3 @@ def get_data(source):
         df = df.loc[df.loc[:, "shipment_origin"] == "ukraine"]
 
     return df
-
-    

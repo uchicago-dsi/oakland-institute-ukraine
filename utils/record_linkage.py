@@ -153,8 +153,6 @@ def record_linkage(df_1, df_2, group, other_cols, sort, asc_bool, agg_dict,
     """
 
     df_1_g = cargo_grouping(df_1, group, other_cols, sort, True, agg_dict)
-    print("IG grouped data:\n", df_1_g)
-    print("BSGI data:\n", df_2)
 
     full_unique = unique_matches(df_1_g, df_2, exact_vars, string_vars, block_vars)
 
