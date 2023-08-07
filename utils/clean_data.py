@@ -141,7 +141,6 @@ def create_columns(df, source):
             product_uk = GoogleTranslator("en", "uk").translate(product)
             df[product] = df["product"].apply(lambda x: True if product_uk in x.lower() else False)
             df["n_products"] += df[product]
-        # translate_column(df, "country", "google", "en", "uk")
 
     elif source == "bsgi":
         df["product_std"] = df["product"].apply(lambda x: CROP_DICT[x])
