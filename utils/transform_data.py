@@ -7,7 +7,7 @@
 from .record_linkage import filter_crop, test_crop
 import pandas as pd
 
-def estimate_weights(company_df, company_col, bsgi_df, bsgi_col, crop):
+def estimate_weights(company_df, company_col, bsgi_df, bsgi_col, crop=None):
     """
     Estimate the export weights for a specific crop.
 
@@ -28,8 +28,18 @@ def estimate_weights(company_df, company_col, bsgi_df, bsgi_col, crop):
     
     # CHANGE THIS SO IT CAN ALLOW MORE THAN ONE COMPANY BY GETTING WEIGHT BY
     # GROUPING BY COMPANY WITH CARGO_GROUPING FUNCTION MAYBE
-    row_1 = company_df[company_col].sum()
-    row_2 = filter_crop(bsgi_df, crop, "bsgi")[bsgi_col].sum()
+    
+    if crop is None:
+        row_1 = company_df[company_col].sum()
+        row_2 = bsgi_df[bsgi_col].sum()
+    else:
+        try:
+            row_1 = filter_crop(company_df, crop, "ig")[company_col].sum()
+        except:
+            # Case when we already filtered the company_df data by crop
+            row_1 = company_df[company_col].sum()
+        
+        row_2 = filter_crop(bsgi_df, crop, "bsgi")[bsgi_col].sum()
 
     # CHANGE THIS SO COMPANY NAMES CAN BE DYMANIC
     d = {"company":["Kernel", "Other"], "weight":[row_1, row_2]}
