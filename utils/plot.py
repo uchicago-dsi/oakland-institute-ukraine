@@ -126,9 +126,11 @@ def label(percentage, data):
     
     Return (str): string with absolute and percentage values
     """
-    absolute = int(np.round(percentage/100.*np.sum(data)))
+    # absolute = int(np.round(percentage/100.*np.sum(data)))
 
-    return f"{absolute:d}\n({percentage:.1f}%)"
+    # return f"{absolute:d} ({percentage:.1f}%)"
+    return f"{percentage:.1f}%"
+
 
 def plot_pie(categories, values, category_title, graph_title):
     """
@@ -145,21 +147,41 @@ def plot_pie(categories, values, category_title, graph_title):
     wedges, texts, autotexts = ax.pie(values, autopct=lambda pct: label(pct, values),
                                     textprops=dict(color="w"),
                                     wedgeprops=dict(width=0.5), startangle=-40,
-                                    pctdistance=1.35)
+                                    pctdistance=0.8)
+
+    # wedges, texts = ax.pie(values, wedgeprops=dict(width=0.5), startangle=-40)
     
-    for autotext in autotexts:
-        autotext.set_color('black')
+    # bbox_props = dict(boxstyle="square,pad=0.3", fc="w", ec="k", lw=0.72)
+    # kw = dict(arrowprops=dict(arrowstyle="-"),
+    #         bbox=bbox_props, zorder=0, va="center")
+
+    # for i, p in enumerate(wedges):
+    #     ang = (p.theta2 - p.theta1)/2. + p.theta1
+    #     y = np.sin(np.deg2rad(ang))
+    #     x = np.cos(np.deg2rad(ang))
+    #     horizontalalignment = {-1: "right", 1: "left"}[int(np.sign(x))]
+    #     connectionstyle = "angle,angleA=0,angleB={}".format(ang)
+    #     kw["arrowprops"].update({"connectionstyle": connectionstyle})
+    #     ax.annotate(f"{round(values[i] / values.sum() * 100, 2)}%", xy=(x, y),
+    #                 xytext=(1.35*np.sign(x), 1.4*y),
+    #                 horizontalalignment=horizontalalignment, **kw)
+    
+    # for autotext in autotexts:
+    #     autotext.set_color('black')
 
     ax.legend(wedges, categories,
             title=category_title,
             loc="center left",
-            bbox_to_anchor=(1, 0, 0.5, 1))
+            # bbox_to_anchor=(1, 0, 0.5, 1),
+            bbox_to_anchor=(1.2, 0.5),
+            fontsize="7")
 
-    plt.setp(autotexts, size=8, weight="bold")
+    plt.setp(autotexts, size=7, weight="bold")
+    # plt.setp(autotexts, size=6)
 
     ax.set_title(graph_title)
-
     plt.show()
+
 
 def plot_horizontal(df, x_var, y_var, x_title, plot_title):
     """

@@ -32,6 +32,23 @@ HS_DICT = {"Rapeseed": "1205", "Rapeseed meal": "2306", "Canola": "1514",
            "Wheat bran pellets": "2302", "Mixed": "",
            "Sugar beet pellets": "2302"}
 
+SUBSIDIARY_DICT = {"enselcoagro": "Kernel Holding", "mhp": "MHP",
+                   "khmilnytske": "Astarta Holding",
+                   "slobozhanschynaagro": "Industrial Milk \nCompany (IMC)",
+                   "nibulon": "Nibulon", "cargill": "Cargill",
+                   "prykarpattya": "UkrLandFarming",
+                   "louisdreyfus": "Louis Dreyfus",
+                   "dobrobut": "Astarta Holding",
+                   "pivdenagroinvest": "TNA Corporate \nSolutions",
+                   "agroton": "Agroton Public \nLimited",
+                   "kernel": "Kernel Holding",
+                   "podillyaagroservice": "Kernel Holding",
+                   "agroholdyngms": "System Capital \nManagement",
+                   "buratagro": "Industrial Milk \nCompany (IMC)",
+                   "agroprosperis": "NHC Capital",
+                   "druzhbanova": "Kernel Holding",
+                   "astarta": "Astarta Holding",
+                   "agroprogress": "Industrial Milk \nCompany (IMC)"}
 
 def keep_chr(ch):
     """
@@ -133,6 +150,7 @@ def create_columns(df, source):
     
     if source == "ig":
         df["weight_ton"] = df["weight_kg"] / 1000
+        df["parent_company"] = df["company_searched"].apply(lambda x: SUBSIDIARY_DICT[x])
         product_std = set(PRODUCTS_VAL)
         # We create a variable that sums the number of products mentioned in the
         # product name
