@@ -55,7 +55,44 @@ def cargo_grouping(df, group, other_cols, sort, asc_bool, agg_dict,
         return grouped.sort_values(by=sort, ascending=asc_bool)
 
     
-def plot_line(x_axis, y_axis, line_labels, graph_title, x_label, y_label, save_fig=True):
+# def plot_line(x_axis, y_axis, line_labels, graph_title, x_label, y_label, save_fig=True):
+#     """
+#     Plot line chart
+
+#     Inputs:
+#         x_axis (array or Series): values for the x axis of the plot
+#         y_axis (lst): list of arrays or series with values for y axis of the
+#             plot. If list has n elements then chart will plot n lines. 
+#         line_labels (lst): list of strings with label names for each line
+#             respectively
+#         graph_title (str): title for line chart
+#         x_label (str): title for the x axis
+#         y_label (str): title for the y axis
+#         save_fig (bool): boolean that states wheter or not to save figure in
+#             "output" directory.
+#     """
+#     fig, ax = plt.subplots(figsize=(12, 6))
+
+#     for i, column in enumerate(y_axis):
+#         ax.plot(x_axis, column, label = line_labels[i])
+#         for x, y in zip(x_axis, column):
+#             ax.annotate(f'{int(y)}', (x, y), textcoords="offset points", xytext=(0, 10), ha='center')
+
+#     plt.setp(ax.get_xticklabels(), rotation=30, horizontalalignment='right')
+
+#     plt.title(graph_title)
+#     plt.xlabel(x_label)
+#     plt.ylabel(y_label)
+#     plt.legend()
+#     spacing = 0.1
+#     fig.subplots_adjust(bottom=spacing)
+
+#     ax.yaxis.set_major_formatter(FuncFormatter(format_func))
+
+#     if save_fig:
+#         plt.savefig("app/output/" + standard_name(graph_title) + ".png")
+
+def plot_line(x_axis, y_axis, line_labels, graph_title, x_label, y_label, data_source, save_fig=True):
     """
     Plot line chart
 
@@ -68,15 +105,17 @@ def plot_line(x_axis, y_axis, line_labels, graph_title, x_label, y_label, save_f
         graph_title (str): title for line chart
         x_label (str): title for the x axis
         y_label (str): title for the y axis
-        save_fig (bool): boolean that states wheter or not to save figure in
+        data_source (str): data source for plot
+        save_fig (bool): boolean that states whether or not to save figure in
             "output" directory.
     """
     fig, ax = plt.subplots(figsize=(12, 6))
 
     for i, column in enumerate(y_axis):
-        ax.plot(x_axis, column, label = line_labels[i])
+        ax.plot(x_axis, column, label=line_labels[i])
         for x, y in zip(x_axis, column):
-            ax.annotate(f'{int(y)}', (x, y), textcoords="offset points", xytext=(0, 10), ha='center')
+            formatted_y = format_func(y, None)  # Format y value with commas
+            ax.annotate(f'{formatted_y}', (x, y), textcoords="offset points", xytext=(0, 10), ha='center')
 
     plt.setp(ax.get_xticklabels(), rotation=30, horizontalalignment='right')
 
@@ -86,6 +125,10 @@ def plot_line(x_axis, y_axis, line_labels, graph_title, x_label, y_label, save_f
     plt.legend()
     spacing = 0.1
     fig.subplots_adjust(bottom=spacing)
+
+    ax.yaxis.set_major_formatter(FuncFormatter(format_func))
+    plt.annotate(f"Source: {data_source}.", (0, 0), (-90, -60), fontsize=6, 
+             xycoords='axes fraction', textcoords='offset points', va='top')
 
     if save_fig:
         plt.savefig("app/output/" + standard_name(graph_title) + ".png")
@@ -118,74 +161,61 @@ def plot_crops(crop, df_1, df_2, save_fig=True):
     plot_line(final["date"], [final["weight_ton_kernel"], final["weight_ton_bsgi"]], ["Kernel", "Black Sea Grain Initiative"], "BSGI and Kernel volume of {} exports".format(crop), "Export date (m-yy)", "{} exported (tons)".format(crop), save_fig)
 
 
-def label(percentage, data):
+def label(percentage, data, min_wedge_percentage):
     """
     Create labels to pie wedges with absolute and percentage values. Reference: https://matplotlib.org/stable/gallery/pie_and_polar_charts/pie_and_donut_labels.html
 
     Inputs:
         percentage (float): percentage of the wedge calculated by the pie function
         data (array or Series): values to be summed and get absolute total value
+        min_wedge_percentage (float, optional): minimum percentage threshold for annotating wedges (default is 5)
     
-    Return (str): string with absolute and percentage values
+    Return (str): string with absolute and percentage values, or an empty string if wedge percentage is below threshold
     """
-    # absolute = int(np.round(percentage/100.*np.sum(data)))
+    if percentage >= min_wedge_percentage:
+        return f"{percentage:.1f}%"
+    else:
+        return ""
 
-    # return f"{absolute:d} ({percentage:.1f}%)"
-    return f"{percentage:.1f}%"
 
-
-def plot_pie(categories, values, category_title, graph_title):
+def plot_pie(categories, values, category_title, graph_title, data_source, min_wedge_percentage=5, min_legend_percentage=2):
     """
-    Plot pie chart. Reference: https://matplotlib.org/stable/gallery/pie_and_polar_charts/pie_and_donut_labels.html
+    Plot pie chart with annotations only for wedges above a minimum threshold size.
 
     Inputs:
         categories (array or Series): categories for the pie wedges
         values (array or Series): values for the pie wedges
         category_title (str): title for category section
         graph_title (str): title for pie chart
+        min_wedge_percentage (float, optional): minimum percentage threshold for annotating wedges (default is 5)
+        min_legend_percentage (float, optional): minimum percentage threshold for annotating wedges (default is 2)
     """
     fig, ax = plt.subplots(figsize=(6, 3), subplot_kw=dict(aspect="equal"))
 
-    wedges, texts, autotexts = ax.pie(values, autopct=lambda pct: label(pct, values),
+    wedges, texts, autotexts = ax.pie(values, autopct=lambda pct: label(pct, values, min_wedge_percentage),
                                     textprops=dict(color="w"),
                                     wedgeprops=dict(width=0.5), startangle=-40,
                                     pctdistance=0.8)
 
-    ax.legend(wedges, categories,
+    annotated_wedges = [wedge for wedge, percentage in zip(wedges, values / sum(values) * 100) if percentage >= min_legend_percentage]
+    ax.legend(annotated_wedges, categories,
             title=category_title,
             loc="center left",
             bbox_to_anchor=(1.2, 0.5),
             fontsize="7")
 
     plt.setp(autotexts, size=7, weight="bold")
-
     ax.set_title(graph_title)
+    plt.annotate(f"Source: {data_source}.", (0, 0), (-90, -60), fontsize=6, 
+             xycoords='axes fraction', textcoords='offset points', va='top')
     plt.show()
 
-    # wedges, texts = ax.pie(values, wedgeprops=dict(width=0.5), startangle=-40)
-    
-    # bbox_props = dict(boxstyle="square,pad=0.3", fc="w", ec="k", lw=0.72)
-    # kw = dict(arrowprops=dict(arrowstyle="-"),
-    #         bbox=bbox_props, zorder=0, va="center")
-
-    # for i, p in enumerate(wedges):
-    #     ang = (p.theta2 - p.theta1)/2. + p.theta1
-    #     y = np.sin(np.deg2rad(ang))
-    #     x = np.cos(np.deg2rad(ang))
-    #     horizontalalignment = {-1: "right", 1: "left"}[int(np.sign(x))]
-    #     connectionstyle = "angle,angleA=0,angleB={}".format(ang)
-    #     kw["arrowprops"].update({"connectionstyle": connectionstyle})
-    #     ax.annotate(f"{round(values[i] / values.sum() * 100, 2)}%", xy=(x, y),
-    #                 xytext=(1.35*np.sign(x), 1.4*y),
-    #                 horizontalalignment=horizontalalignment, **kw)
-    
-    # for autotext in autotexts:
-    #     autotext.set_color('black')
 
 def format_func(value, tick_number):
     return '{:,}'.format(int(value))
 
-def plot_horizontal(df, x_var, y_var, x_title, plot_title):
+
+def plot_horizontal(df, x_var, y_var, x_title, y_title, plot_title, data_source):
     """
     Plot a horizontal bar graph.
 
@@ -194,7 +224,8 @@ def plot_horizontal(df, x_var, y_var, x_title, plot_title):
         x_var (str): variable we want to plot in horizontal axis
         y_var (str): variable we want to plot in vertical axis
         x_title (str): horizontal axis title
-        plot_title (str): plot title.
+        plot_title (str): plot title
+        data_source (str): cite data source for plot.
     """
     plt.rcdefaults()
     fig, ax = plt.subplots()
@@ -207,8 +238,9 @@ def plot_horizontal(df, x_var, y_var, x_title, plot_title):
     ax.set_yticks(y_pos, labels=y_labels)
     ax.invert_yaxis()
     ax.set_xlabel(x_title)
+    ax.set_ylabel(y_title)
     ax.set_title(plot_title)
-    ax.tick_params(axis="y", labelsize = 8)
+    ax.tick_params(axis="y", labelsize = 6)
 
     # Add annotations to the bars
     for i, value in enumerate(df.loc[:, x_var]):
@@ -221,6 +253,8 @@ def plot_horizontal(df, x_var, y_var, x_title, plot_title):
     # Adjust layout to prevent overlapping labels
     plt.tight_layout()
     plt.setp(ax.get_xticklabels(), rotation=30, horizontalalignment='right')
+    plt.annotate(f"Source: {data_source}.", (0,0), (-90,-60), fontsize=6, 
+             xycoords='axes fraction', textcoords='offset points', va='top')
     plt.show()
 
 def plot_bar(x_var, y_var, x_title, y_title, plot_title):
