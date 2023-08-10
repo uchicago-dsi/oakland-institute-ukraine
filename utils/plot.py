@@ -7,6 +7,8 @@
 import matplotlib.pyplot as plt
 from .clean_data import standard_name
 import numpy as np
+from matplotlib.ticker import FuncFormatter
+
 
 def cargo_grouping(df, group, other_cols, sort, asc_bool, agg_dict,
                    new_name = None):
@@ -149,6 +151,17 @@ def plot_pie(categories, values, category_title, graph_title):
                                     wedgeprops=dict(width=0.5), startangle=-40,
                                     pctdistance=0.8)
 
+    ax.legend(wedges, categories,
+            title=category_title,
+            loc="center left",
+            bbox_to_anchor=(1.2, 0.5),
+            fontsize="7")
+
+    plt.setp(autotexts, size=7, weight="bold")
+
+    ax.set_title(graph_title)
+    plt.show()
+
     # wedges, texts = ax.pie(values, wedgeprops=dict(width=0.5), startangle=-40)
     
     # bbox_props = dict(boxstyle="square,pad=0.3", fc="w", ec="k", lw=0.72)
@@ -169,19 +182,8 @@ def plot_pie(categories, values, category_title, graph_title):
     # for autotext in autotexts:
     #     autotext.set_color('black')
 
-    ax.legend(wedges, categories,
-            title=category_title,
-            loc="center left",
-            # bbox_to_anchor=(1, 0, 0.5, 1),
-            bbox_to_anchor=(1.2, 0.5),
-            fontsize="7")
-
-    plt.setp(autotexts, size=7, weight="bold")
-    # plt.setp(autotexts, size=6)
-
-    ax.set_title(graph_title)
-    plt.show()
-
+def format_func(value, tick_number):
+    return '{:,}'.format(int(value))
 
 def plot_horizontal(df, x_var, y_var, x_title, plot_title):
     """
@@ -206,6 +208,20 @@ def plot_horizontal(df, x_var, y_var, x_title, plot_title):
     ax.invert_yaxis()
     ax.set_xlabel(x_title)
     ax.set_title(plot_title)
+    ax.tick_params(axis="y", labelsize = 8)
+
+    # Add annotations to the bars
+    for i, value in enumerate(df.loc[:, x_var]):
+        # Adjust the x-coordinate value (value + xOffset) to move the annotation to the right
+        xOffset = 0.05
+        ax.text(value + xOffset, i, f'{value:,.0f}', ha='left', va='center', color='black', fontsize=8)
+
+    ax.xaxis.set_major_formatter(FuncFormatter(format_func))
+    
+    # Adjust layout to prevent overlapping labels
+    plt.tight_layout()
+    plt.setp(ax.get_xticklabels(), rotation=30, horizontalalignment='right')
+    plt.show()
 
 def plot_bar(x_var, y_var, x_title, y_title, plot_title):
     """
