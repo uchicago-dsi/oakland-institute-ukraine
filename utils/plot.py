@@ -133,7 +133,7 @@ def plot_line(x_axis, y_axis, line_labels, graph_title, x_label, y_label, data_s
     if save_fig:
         plt.savefig("app/output/" + standard_name(graph_title) + ".png")
 
-def plot_crops(crop, df_1, df_2, save_fig=True):
+def plot_crops(crop, df_1, df_2, data_source, save_fig=True):
     """
     Plot line chart with crops exports for one company and the total BSGI
         exports
@@ -142,6 +142,7 @@ def plot_crops(crop, df_1, df_2, save_fig=True):
         crop (str): name of crop that we want to plot
         df_1 (DataFrame): dataset to use for first line
         df_2 (DataFrame): dataset to use for second line
+        data_source (str): data source for plot
         save_fig (bool): boolean that states wheter or not to save figure in
             "output" directory.
     """
