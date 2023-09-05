@@ -24,7 +24,7 @@ def estimate_weights(company_df, company_col, company_add, bsgi_df, bsgi_col, pl
         plot_title (str): title for plot
         crop (str): crop we want to use to estimate export weights.
 
-    Returns (Plot): pie plot with export shares by company.
+    Returns (DataFrame): dataframe to plot.
     """
     
     if crop is None:
@@ -39,9 +39,9 @@ def estimate_weights(company_df, company_col, company_add, bsgi_df, bsgi_col, pl
         bsgi_final = pd.DataFrame(bsgi_dict)
         final = pd.concat([company_g, bsgi_final], ignore_index=True)
         final = final.sort_values(by=[bsgi_col], ascending=False)
-        final
-
-        return plot_pie(final[company_col], final[bsgi_col], company_col, plot_title, "Company data for October 2022", 2, 0.1)
+        # print("Table for plot:\n", final)
+        plot_pie(final[company_col], final[bsgi_col], company_col, plot_title, "Company data for October 2022", 2, 0.1)
+        return final
     
     else:
         test_crop(crop)
