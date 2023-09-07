@@ -8,6 +8,7 @@ import matplotlib.pyplot as plt
 from .clean_data import standard_name
 import numpy as np
 from matplotlib.ticker import FuncFormatter
+import pandas as pd
 
 
 def cargo_grouping(df, group, other_cols, sort, asc_bool, agg_dict,
@@ -250,3 +251,29 @@ def plot_bar(x_var, y_var, x_title, y_title, plot_title):
     plt.xticks(rotation=90)
     plt.tick_params(axis='x', which='major', labelsize=10)
     plt.show()
+
+def plot_stack_bar(df, x_title, y_title, plot_title, x_ticks, ylim):
+    """
+    Plot a stacked bar chart.
+
+    Inputs:
+        df (DataFrame): data we want to plot
+        x_title (str): horizontal axis title
+        y_title (str): horizontal axis title
+        plot_title (str): plot title
+        x_ticks (str): name of column to use for x axis tick names
+        ylim (int): limit for y axis.
+    """
+    ax = df.plot.bar(stacked=True, figsize=(8,6))
+    ax.set_title(plot_title, fontsize=20)
+    ax.set_ylim(0,ylim)
+    ax.set_xlabel(x_title)
+    ax.set_ylabel(y_title)
+    ax.set_xticklabels(df[x_ticks], rotation=0)
+    for p in ax.patches:
+        width, height = p.get_width(), p.get_height()
+        x, y = p.get_xy()
+        # Check if the height is not NaN before adding the annotation
+        if not np.isnan(height) and height != 0:
+            ax.text(x + width / 2, y + height / 2, height,
+                    ha='center', va='center')
