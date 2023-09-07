@@ -64,18 +64,24 @@ def find_matches(df_1, df_2, exact_vars= None, string_vars=None,
     """
 
     indexer = recordlinkage.Index()
-    for block in block_vars:
-        indexer.block(block)
+
+    if block_vars is not None:
+        for block in block_vars:
+            indexer.block(block)
+    else:
+        indexer.full()
     candidate_links = indexer.index(df_1, df_2)
 
     # Comparison step
     compare_cl = recordlinkage.Compare()
 
-    for exact in exact_vars:
-        compare_cl.exact(exact, exact, label=exact)
-    for string in string_vars:
-        compare_cl.string(string, string, method="jarowinkler", threshold=0.9,
-                                                                label=string)
+    if exact_vars is not None:
+        for exact in exact_vars:
+            compare_cl.exact(exact, exact, label=exact)
+    if string_vars is not None:
+        for string in string_vars:
+            compare_cl.string(string, string, method="jarowinkler",
+                              threshold=0.9, label=string)
 
     features = compare_cl.compute(candidate_links, df_1, df_2)
 

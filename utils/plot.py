@@ -54,43 +54,6 @@ def cargo_grouping(df, group, other_cols, sort, asc_bool, agg_dict,
     else:
         return grouped.sort_values(by=sort, ascending=asc_bool)
 
-    
-# def plot_line(x_axis, y_axis, line_labels, graph_title, x_label, y_label, save_fig=True):
-#     """
-#     Plot line chart
-
-#     Inputs:
-#         x_axis (array or Series): values for the x axis of the plot
-#         y_axis (lst): list of arrays or series with values for y axis of the
-#             plot. If list has n elements then chart will plot n lines. 
-#         line_labels (lst): list of strings with label names for each line
-#             respectively
-#         graph_title (str): title for line chart
-#         x_label (str): title for the x axis
-#         y_label (str): title for the y axis
-#         save_fig (bool): boolean that states wheter or not to save figure in
-#             "output" directory.
-#     """
-#     fig, ax = plt.subplots(figsize=(12, 6))
-
-#     for i, column in enumerate(y_axis):
-#         ax.plot(x_axis, column, label = line_labels[i])
-#         for x, y in zip(x_axis, column):
-#             ax.annotate(f'{int(y)}', (x, y), textcoords="offset points", xytext=(0, 10), ha='center')
-
-#     plt.setp(ax.get_xticklabels(), rotation=30, horizontalalignment='right')
-
-#     plt.title(graph_title)
-#     plt.xlabel(x_label)
-#     plt.ylabel(y_label)
-#     plt.legend()
-#     spacing = 0.1
-#     fig.subplots_adjust(bottom=spacing)
-
-#     ax.yaxis.set_major_formatter(FuncFormatter(format_func))
-
-#     if save_fig:
-#         plt.savefig("app/output/" + standard_name(graph_title) + ".png")
 
 def plot_line(x_axis, y_axis, line_labels, graph_title, x_label, y_label, data_source, save_fig=True):
     """
@@ -192,7 +155,7 @@ def plot_pie(categories, values, category_title, graph_title, data_source, min_w
         min_legend_percentage (float, optional): minimum percentage threshold for annotating wedges (default is 2)
     """
     fig, ax = plt.subplots(figsize=(6, 3), subplot_kw=dict(aspect="equal"))
-
+    print("Values passed to ax.pie:\n", values)
     wedges, texts, autotexts = ax.pie(values, autopct=lambda pct: label(pct, values, min_wedge_percentage),
                                     textprops=dict(color="w"),
                                     wedgeprops=dict(width=0.5), startangle=-40,
