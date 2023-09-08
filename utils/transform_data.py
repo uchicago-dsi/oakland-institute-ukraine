@@ -137,4 +137,38 @@ def create_wide_table(df, group, other_cols, sort, asc_bool, agg_dict,
                                                          axis=1).round(1)
     
     return pivot
+
+def data_source_table(df, group, other_cols, sort, asc_bool, agg_dict,
+                   new_name = None):
+    """
+    Create wide table from dataframe.
+
+    Inputs:
+        df (DataFrame): dataset to be used
+        group (lst): list of columns to group by
+        other_cols(lst): list of columns that are going to be aggregated
+        sort (lst): list of columns to sort dataframe by. If new_name is not
+            empty then the new column names should be used
+        asc_bool (bool): boolean stating wheter or not to sort data "ascending"
+            (True) or "descending" (False)
+        agg_dict (dict): dict with aggregation functions we want to apply to
+            data. If we want to aggregate a column by more than one function
+            we put the functions as a list. Example: {"var": ["count", "sum"]}.
+        new_name (lst): optional paramater with list of new names for grouped
+            dataframe. Default is "None".
+
+    Return(DataFrame): wide table with month-year and standardized company names
+    as columns
+    """
+    # First we get long table by grouping data
+    df_g = cargo_grouping(df, group, other_cols, sort, asc_bool, agg_dict)
+    df_g["date"] = df_g["month"].astype(str) + "/" + df_g["year"].astype(str)
     
+    # Now we get the wide table format
+    pivot = pd.pivot_table(data=df_g, index=['date', "year", "month"],
+                           columns=['company_std'],
+                           values='weight_ton').reset_index()
+    pivot = pivot.sort_values(by=["year", "month"]).drop(['year', 'month'],
+                                                         axis=1).round(1)
+    
+    return pivot
