@@ -252,7 +252,7 @@ def plot_bar(x_var, y_var, x_title, y_title, plot_title):
     plt.tick_params(axis='x', which='major', labelsize=10)
     plt.show()
 
-def plot_stack_bar(df, x_title, y_title, plot_title, x_ticks, ylim):
+def plot_stack_bar(df, x_title, y_title, plot_title, x_ticks, ylim, data_source):
     """
     Plot a stacked bar chart.
 
@@ -262,7 +262,8 @@ def plot_stack_bar(df, x_title, y_title, plot_title, x_ticks, ylim):
         y_title (str): horizontal axis title
         plot_title (str): plot title
         x_ticks (str): name of column to use for x axis tick names
-        ylim (int): limit for y axis.
+        ylim (int): limit for y axis
+        data_source (str): data source text.
     """
     ax = df.plot.bar(stacked=True, figsize=(8,6))
     ax.set_title(plot_title, fontsize=20)
@@ -277,3 +278,5 @@ def plot_stack_bar(df, x_title, y_title, plot_title, x_ticks, ylim):
         if not np.isnan(height) and height != 0:
             ax.text(x + width / 2, y + height / 2, height,
                     ha='center', va='center')
+    ax.annotate(f"Source: {data_source}.", (0,0), (-90,-60), fontsize=6, 
+             xycoords='axes fraction', textcoords='offset points', va='top')
