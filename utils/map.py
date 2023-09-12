@@ -32,7 +32,7 @@ def filter_country(locations, country_df):
     # Filter Ukrainian lands
     deals_c.loc[:, "country_low"] = deals_c.loc[:, "Target country"].str.lower()
     deals_c = deals_c.loc[deals_c.loc[:, "country_low"].str.contains("ukraine", na=False), ["Deal ID"]]
-    final = locations_c.merge(deals_c, on="Deal ID")
+    final = deals_c.merge(locations_c, on="Deal ID")
 
     return final
 
@@ -88,3 +88,20 @@ def top_subsidiaries(data, company, top_k):
     data_g = data_g.sum().reset_index().sort_values(by="Deal size", ascending=False)
 
     return data_g["Operating company: Name"].unique()[:top_k]
+
+def top_parent(data, top_k):
+    """
+    Get top k parent companies based on land size of deal
+
+    Inputs:
+        data (DataFrame): dataset with companies' data
+        top_k (int): maximum number of subsidiaries related to parent company
+            you want to display
+    
+    Returns (array): array with top k parent companies
+    """
+    
+    data_g = data.loc[:, ["Top parent companies", "Deal size"]].groupby(["Top parent companies"])
+    data_g = data_g.sum().reset_index().sort_values(by="Deal size", ascending=False)
+
+    return data_g["Top parent companies"].unique()[:top_k]
