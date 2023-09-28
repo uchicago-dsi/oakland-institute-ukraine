@@ -265,7 +265,11 @@ def plot_stack_bar(df, x_title, y_title, plot_title, x_ticks, ylim, data_source)
         ylim (int): limit for y axis
         data_source (str): data source text.
     """
-    ax = df.plot.bar(stacked=True, figsize=(8,6))
+    # df = df.apply(pd.to_numeric, errors='coerce')
+    
+    color_palette = plt.cm.get_cmap('tab20c', len(df.columns))
+
+    ax = df.plot.bar(stacked=True, figsize=(8,6), color=color_palette.colors)
     ax.set_title(plot_title, fontsize=20)
     ax.set_ylim(0,ylim)
     ax.set_xlabel(x_title)
@@ -274,9 +278,19 @@ def plot_stack_bar(df, x_title, y_title, plot_title, x_ticks, ylim, data_source)
     for p in ax.patches:
         width, height = p.get_width(), p.get_height()
         x, y = p.get_xy()
+        
         # Check if the height is not NaN before adding the annotation
         if not np.isnan(height) and height != 0:
             ax.text(x + width / 2, y + height / 2, height,
                     ha='center', va='center')
+            
+            # # Calculate and annotate the percentage
+            # total_height = df.sum(axis=1)
+            # percentage = (height / total_height[p.get_x()]) * 100
+            # ax.text(x + width / 2, y + height + 5, f'{percentage:.2f}%', ha='center')
+
     ax.annotate(f"Source: {data_source}.", (0,0), (-90,-60), fontsize=6, 
              xycoords='axes fraction', textcoords='offset points', va='top')
+    
+    # Move the legend outside the plot
+    ax.legend(loc='upper left', bbox_to_anchor=(1, 1))
