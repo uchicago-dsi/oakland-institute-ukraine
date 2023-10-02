@@ -153,7 +153,7 @@ def plot_pie(categories, values, category_title, graph_title, data_source, min_w
         category_title (str): title for category section
         graph_title (str): title for pie chart
         min_wedge_percentage (float, optional): minimum percentage threshold for annotating wedges (default is 5)
-        min_legend_percentage (float, optional): minimum percentage threshold for annotating wedges (default is 2)
+        min_legend_percentage (float, optional): minimum percentage threshold for adding wedges legend (default is 2)
     """
     fig, ax = plt.subplots(figsize=(6, 3), subplot_kw=dict(aspect="equal"))
     print("Values passed to ax.pie:\n", values)
@@ -165,8 +165,8 @@ def plot_pie(categories, values, category_title, graph_title, data_source, min_w
     annotated_wedges = [wedge for wedge, percentage in zip(wedges, values / sum(values) * 100) if percentage >= min_legend_percentage]
     ax.legend(annotated_wedges, categories,
             title=category_title,
-            loc="center left",
-            bbox_to_anchor=(1.2, 0.5),
+            loc="upper left",
+            bbox_to_anchor=(1, 1),
             fontsize="7")
 
     plt.setp(autotexts, size=7, weight="bold")
