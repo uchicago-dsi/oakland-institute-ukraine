@@ -150,7 +150,7 @@ def create_columns(df, source):
     
     if source == "ig":
         df["weight_ton"] = df["weight_kg"] / 1000
-        df["parent_company"] = df["company_searched"].apply(lambda x: SUBSIDIARY_DICT[x])
+        # df["parent_company"] = df["company_searched"].apply(lambda x: SUBSIDIARY_DICT[x])
         product_std = set(PRODUCTS_VAL)
         # We create a variable that sums the number of products mentioned in the
         # product name
