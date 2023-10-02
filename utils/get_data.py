@@ -66,7 +66,7 @@ def compile_data(directory_name):
 
     return compiled_df
 
-def get_data(source):
+def get_data(source, path=None):
     """
     Get clean data from data source directory
     Inputs:
@@ -80,7 +80,12 @@ def get_data(source):
     assert source in data_sources, "Wrong data source Error: source must be\
                                     'ig', 'bsgi' or 'panjiva'."
     
-    df = compile_data(source)
+    if path is None:
+        df = compile_data(source)
+    else:
+        df = import_data(path, source)
+        if source == "ig":
+            df["company_searched"] = df["SHIPPER"]
     df = rename_columns(df, source)
     create_columns(df, source)
     
