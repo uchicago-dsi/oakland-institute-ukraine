@@ -32,6 +32,12 @@ HS_DICT = {"Rapeseed": "1205", "Rapeseed meal": "2306", "Canola": "1514",
            "Wheat bran pellets": "2302", "Mixed": "",
            "Sugar beet pellets": "2302"}
 
+HS_BSGI = {"1205": "Rapeseed", "1514": "Canola",
+           "1005": "Corn", "1512": "Sunflower oil", "1206": "Sunflower seed",
+           "2306": "Sunflower meal", "1001":  "Wheat", "1201": "Soya beans",
+           "1507": "Soya oil", "1003":  "Barley", "0713": "Peas",
+           "1516": "Vegetable oil", "2302": "Sugar beet pellets"}
+
 SUBSIDIARY_DICT = {"enselcoagro": "Kernel Holding", "mhp": "MHP",
                    "khmilnytske": "Astarta Holding",
                    "slobozhanschynaagro": "Industrial Milk \nCompany (IMC)",
@@ -150,6 +156,9 @@ def create_columns(df, source):
     
     if source == "ig":
         df["weight_ton"] = df["weight_kg"] / 1000
+        df["bsgi_commodity"] = df["hs_code"].str[:4].apply(lambda x: HS_BSGI[x]
+                                                           if x in HS_BSGI
+                                                           else "Not in BSGI")
         # df["parent_company"] = df["company_searched"].apply(lambda x: SUBSIDIARY_DICT[x])
         product_std = set(PRODUCTS_VAL)
         # We create a variable that sums the number of products mentioned in the
