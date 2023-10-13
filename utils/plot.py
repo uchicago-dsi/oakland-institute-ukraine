@@ -56,7 +56,8 @@ def cargo_grouping(df, group, other_cols, sort, asc_bool, agg_dict,
         return grouped.sort_values(by=sort, ascending=asc_bool)
 
 
-def plot_line(x_axis, y_axis, line_labels, graph_title, x_label, y_label, data_source, save_fig=True):
+def plot_line(x_axis, y_axis, line_labels, graph_title, x_label, y_label,
+              data_source, save_fig=True):
     """
     Plot line chart
 
@@ -79,7 +80,8 @@ def plot_line(x_axis, y_axis, line_labels, graph_title, x_label, y_label, data_s
         ax.plot(x_axis, column, label=line_labels[i])
         for x, y in zip(x_axis, column):
             formatted_y = format_func(y, None)  # Format y value with commas
-            ax.annotate(f'{formatted_y}', (x, y), textcoords="offset points", xytext=(0, 10), ha='center')
+            ax.annotate(f'{formatted_y}', (x, y), textcoords="offset points",
+                        xytext=(0, 10), ha='center')
 
     plt.setp(ax.get_xticklabels(), rotation=30, horizontalalignment='right')
 
@@ -112,28 +114,35 @@ def plot_crops(crop, df_1, df_2, data_source, save_fig=True):
     """
 
     crop_kernel = df_1.loc[df_1.loc[:, crop] == True]
-    kernel_g = cargo_grouping(crop_kernel, ["year", "month"], ["weight_ton"], ["year", "month"], True, {"weight_ton": "sum"})
+    kernel_g = cargo_grouping(crop_kernel, ["year", "month"], ["weight_ton"],
+                              ["year", "month"], True, {"weight_ton": "sum"})
     kernel_g["date"] = kernel_g["month"].astype(str) + "/" + kernel_g["year"].astype(str)
 
     # BSGI data
     crop_bsgi = df_2.loc[df_2.loc[:, "product_std"] == crop]
-    outbound_g = cargo_grouping(crop_bsgi, ["year", "month"], ["weight_ton"], ["year", "month"], True, {"weight_ton": "sum"})
+    outbound_g = cargo_grouping(crop_bsgi, ["year", "month"], ["weight_ton"],
+                                ["year", "month"], True, {"weight_ton": "sum"})
     outbound_g["date"] = outbound_g["month"].astype(str) + "/" + outbound_g["year"].astype(str)
 
     # Plot together
     final = kernel_g.merge(outbound_g, on="date", suffixes=("_kernel", "_bsgi"))
 
-    plot_line(final["date"], [final["weight_ton_kernel"], final["weight_ton_bsgi"]], ["Kernel", "Black Sea Grain Initiative"], "BSGI and Kernel volume of {} exports".format(crop), "Export date (m-yy)", "{} exported (tons)".format(crop), save_fig)
+    plot_line(final["date"], [final["weight_ton_kernel"], final["weight_ton_bsgi"]],
+              ["Kernel", "Black Sea Grain Initiative"],
+              "BSGI and Kernel volume of {} exports".format(crop),
+              "Export date (m-yy)", "{} exported (tons)".format(crop), save_fig)
 
 
 def label(percentage, data, min_wedge_percentage):
     """
-    Create labels to pie wedges with absolute and percentage values. Reference: https://matplotlib.org/stable/gallery/pie_and_polar_charts/pie_and_donut_labels.html
+    Create labels to pie wedges with absolute and percentage values. Reference:
+    https://matplotlib.org/stable/gallery/pie_and_polar_charts/pie_and_donut_labels.html
 
     Inputs:
         percentage (float): percentage of the wedge calculated by the pie function
         data (array or Series): values to be summed and get absolute total value
-        min_wedge_percentage (float, optional): minimum percentage threshold for annotating wedges (default is 5)
+        min_wedge_percentage (float, optional): minimum percentage threshold for
+            annotating wedges (default is 5).
     
     Return (str): string with absolute and percentage values, or an empty string if wedge percentage is below threshold
     """
@@ -143,17 +152,21 @@ def label(percentage, data, min_wedge_percentage):
         return ""
 
 
-def plot_pie(categories, values, category_title, graph_title, data_source, min_wedge_percentage=5, min_legend_percentage=2):
+def plot_pie(categories, values, category_title, graph_title, data_source,
+             min_wedge_percentage=5, min_legend_percentage=2):
     """
-    Plot pie chart with annotations only for wedges above a minimum threshold size.
+    Plot pie chart with annotations only for wedges above a minimum threshold
+        size.
 
     Inputs:
         categories (array or Series): categories for the pie wedges
         values (array or Series): values for the pie wedges
         category_title (str): title for category section
         graph_title (str): title for pie chart
-        min_wedge_percentage (float, optional): minimum percentage threshold for annotating wedges (default is 5)
-        min_legend_percentage (float, optional): minimum percentage threshold for adding wedges legend (default is 2)
+        min_wedge_percentage (float, optional): minimum percentage threshold for
+            annotating wedges (default is 5)
+        min_legend_percentage (float, optional): minimum percentage threshold
+            for adding wedges legend (default is 2).
     """
     fig, ax = plt.subplots(figsize=(6, 3), subplot_kw=dict(aspect="equal"))
     print("Values passed to ax.pie:\n", values)
