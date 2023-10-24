@@ -169,7 +169,6 @@ def plot_pie(categories, values, category_title, graph_title, data_source,
             for adding wedges legend (default is 2).
     """
     fig, ax = plt.subplots(figsize=(6, 3), subplot_kw=dict(aspect="equal"))
-    print("Values passed to ax.pie:\n", values)
     wedges, texts, autotexts = ax.pie(values, autopct=lambda pct: label(pct, values, min_wedge_percentage),
                                     textprops=dict(color="w"),
                                     wedgeprops=dict(width=0.5), startangle=-40,
