@@ -1,4 +1,4 @@
-# TODO: set up logic to handle different chip architecture using environment variables
+# TODO: set up logic to handle different chip architecture using environment variables in a Makefile
 FROM --platform=linux/arm64 osgeo/gdal:ubuntu-full-3.6.3
 
 RUN apt-get -y update 
