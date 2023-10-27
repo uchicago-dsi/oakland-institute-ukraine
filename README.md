@@ -27,9 +27,11 @@ This setup should only have to be run once per machine you run it on.
    Run the Docker image:
 
    ```sh
-   docker run -v $(current_abs_path):/notebooks --name notebooks-jupyter --rm -p 8888:8888 -t ukraine
+   docker run -v $(pwd)/notebooks:/app/notebooks -v $(pwd)/data:/app/data --name notebooks-jupyter --rm -p 8888:8888 -t ukraine
    ```
 
+   This works:
+   `docker run -v $(pwd)/notebooks:/app/notebooks --rm -it ukraine /bin/bash`
    Where `$(current_abs_path)` is the path to the repo directory in your local machine.
 
 8. Copy and paste the Jupyter server URL in your preferred web browser.
