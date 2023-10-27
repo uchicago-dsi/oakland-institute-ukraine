@@ -12,15 +12,12 @@ RUN apt -y install python3-pip libspatialindex-dev \
 # set a directory for the app
 WORKDIR /app
 
-# copy all the files to the container
-COPY requirements.txt .
+# copy utils to notebook
+COPY ./utils /app/utils
 
-# install dependencies
+# copy requirements and install dependencies
+COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
-COPY . .
-
-# RUN mkdir -p /app/data/{ig, bsgi, panjiva, land_matrix, regional_maps}
-
-# run the command
+# run jupyter command
 CMD ["jupyter", "notebook", "--port=8888", "--no-browser", "--ip=0.0.0.0", "--allow-root", "--NotebookApp.token=''", "--NotebookApp.password=''"]
