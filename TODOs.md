@@ -3,6 +3,7 @@
 - Create a Makefile
 - Handle different chip architectures
 - Handle volume mounting correctly
+  `docker run -v $(pwd)/notebooks:/app/notebooks -v $(pwd)/data:/app/data -p 8888:8888 -t ukraine`
 
 ## File Structure
 
@@ -12,6 +13,7 @@
 
 - Build so that there is a more standard "pipeline" structure with error handling
 - Figure out when we need to copy the dataframe vs when we just need to return slices
+- Use standard python logger to keep track of where you are
 
 ## Pipeline Pseudocode
 
@@ -43,6 +45,18 @@ def pipeline_ig(country, write=True, **kwargs):
 
     return df_ig
 ```
+
+Ok, after going through this in a bit more detail, I do think that creating an ABC is probably the best way to do this since we have some pretty consistent actions that we are taking for all data sources, then we are doing some idiosyncratic things for them based upon which datasource we have.
+
+If we really start pulling this apart, it would be good to have some tests that we can run as well.
+
+## Overall flow
+
+Here's how I think this should be set up — it's kind of like this already, but I think it would be good to more explicitly create each of these parts.
+
+1. Pipeline: read and clean data from each data source » returns cleaned dataframes for each data source
+2. Merging and filtering: match and merge dataframes from different sources with options to filter on date, commodity, etc. » returns a dataframe ready for analysis
+3. Plotting and analysis: take the cleaned, merged and filtered data and display plots and/or tables
 
 ## General Cleanup
 
