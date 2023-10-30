@@ -1,4 +1,13 @@
-FROM python:3.8
+# TODO: set up logic to handle different chip architecture using environment variables
+FROM --platform=linux/arm64 osgeo/gdal:ubuntu-full-3.6.3
+
+RUN apt-get -y update 
+
+RUN apt -y install python3-pip libspatialindex-dev \
+    && apt-get install -y --no-install-recommends \
+       gdal-bin \
+       libgdal-dev \
+    && rm -rf /var/lib/apt/lists/*
 
 # set a directory for the app
 WORKDIR /app
