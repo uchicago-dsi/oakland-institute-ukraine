@@ -103,7 +103,7 @@ def standard_company_name(company_col, company_dict):
     
     return standard_col
 
-def create_wide_table(df, group, other_cols, sort, asc_bool, agg_dict,
+def create_wide_table(df, group, agg_cols, sort, asc_bool, agg_dict,
                    new_name = None):
     """
     Create wide table from dataframe.
@@ -126,7 +126,7 @@ def create_wide_table(df, group, other_cols, sort, asc_bool, agg_dict,
     as columns
     """
     # First we get long table by grouping data
-    df_g = cargo_grouping(df, group, other_cols, sort, asc_bool, agg_dict)
+    df_g = cargo_grouping(df, group, agg_cols, sort, asc_bool, agg_dict)
     df_g["date"] = df_g["month"].astype(str) + "/" + df_g["year"].astype(str)
     
     # Now we get the wide table format
