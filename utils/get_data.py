@@ -51,6 +51,8 @@ def compile_data(directory_name):
     
     if directory_name == "bsgi":
         return import_data(os.path.join(path, "bsgi_outbound.csv"), directory_name)
+    elif directory_name == "ig":
+        path = os.path.join(path, "company_files")
     
     file_formats = ["xlsx", "csv"]
     compiled_df = pd.DataFrame()
