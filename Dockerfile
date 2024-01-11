@@ -1,4 +1,4 @@
-# TODO: set up logic to handle different chip architecture using environment variables
+# TODO: set up logic to handle different chip architecture using environment variables in a Makefile
 FROM --platform=linux/arm64 osgeo/gdal:ubuntu-full-3.6.3
 
 RUN apt-get -y update 
@@ -12,15 +12,12 @@ RUN apt -y install python3-pip libspatialindex-dev \
 # set a directory for the app
 WORKDIR /app
 
-# copy all the files to the container
-COPY requirements.txt .
+# copy utils to notebook
+COPY ./utils /app/utils
 
-# install dependencies
+# copy requirements and install dependencies
+COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
-COPY . .
-
-# RUN mkdir -p /app/data/{ig, bsgi, panjiva, land_matrix, regional_maps}
-
-# run the command
+# run jupyter command
 CMD ["jupyter", "notebook", "--port=8888", "--no-browser", "--ip=0.0.0.0", "--allow-root", "--NotebookApp.token=''", "--NotebookApp.password=''"]
