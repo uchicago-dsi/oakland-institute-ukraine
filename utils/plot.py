@@ -11,7 +11,7 @@ from matplotlib.ticker import FuncFormatter
 import pandas as pd
 
 
-def cargo_grouping(df, group, other_cols, sort, asc_bool, agg_dict,
+def cargo_grouping(df, group, agg_cols, sort, asc_bool, agg_dict,
                    new_name = None):
     """
     Create grouped dataframes for charts.
@@ -19,7 +19,7 @@ def cargo_grouping(df, group, other_cols, sort, asc_bool, agg_dict,
     Inputs:
         df (DataFrame): dataset to be used
         group (lst): list of columns to group by
-        other_cols(lst): list of columns that are going to be aggregated
+        agg_cols(lst): list of columns that are going to be aggregated
         sort (lst): list of columns to sort dataframe by. If new_name is not
             empty then the new column names should be used
         asc_bool (bool): boolean stating wheter or not to sort data "ascending"
@@ -35,13 +35,13 @@ def cargo_grouping(df, group, other_cols, sort, asc_bool, agg_dict,
     assert isinstance(agg_dict, dict), "Argument Error: Pass a dictionary to\
     'agg_dict' with columns to aggregate as keys and aggretate functions as values."
 
-    cols = other_cols[:]
+    cols = agg_cols[:]
     cols.extend(group)
     df_g = df.loc[:, cols].groupby(group, as_index=False)
 
     if new_name is not None:
         col_dict = {}
-        for i, col in enumerate(other_cols):
+        for i, col in enumerate(agg_cols):
             col_dict[col] = new_name[i]
         grouped = df_g.agg(agg_dict).rename(columns = col_dict)
 
