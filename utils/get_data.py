@@ -6,37 +6,36 @@
 
 import os
 import pandas as pd
-from .clean_data import rename_columns, create_columns, translate_column, clean_column
 import re
 
 CURRENT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-# def get_data(path, source):
-#     """
-#     Import data from .csv file name
+def get_data(path, source):
+    """
+    Import data from .csv file name
 
-#     Inputs:
-#         path (str): path for data file
-#         source (str): data source, either "ig" (Import Genius), "bsgi" (Black
-#             Sea Grain Initiative) or panjiva.
+    Inputs:
+        path (str): path for data file
+        source (str): data source, either "ig" (Import Genius), "bsgi" (Black
+            Sea Grain Initiative) or panjiva.
 
-#     Return (DataFrame): dataframe.
-#     """
+    Return (DataFrame): dataframe.
+    """
 
-#     if source == "ig":
-#         df = pd.read_csv(path, parse_dates=["EXPORT DATE"], encoding = "utf-8")
-#         # Add 0 to HS Codes that have 9 digits because apparently Import Genius
-#         # cuts the 0 at the beggining 
-#         df["HS CODE"] = df["HS CODE"].astype(str)
-#         df["HS CODE"] = df["HS CODE"].apply(lambda x: "0" + x if len(x) == 9 else x)
+    if source == "ig":
+        df = pd.read_csv(path, parse_dates=["EXPORT DATE"], encoding = "utf-8")
+        # Add 0 to HS Codes that have 9 digits because apparently Import Genius
+        # cuts the 0 at the beggining 
+        df["HS CODE"] = df["HS CODE"].astype(str)
+        df["HS CODE"] = df["HS CODE"].apply(lambda x: "0" + x if len(x) == 9 else x)
     
-#     elif source == "bsgi":
-#         df = pd.read_csv(path, thousands=",", parse_dates=["Departure date"])
+    elif source == "bsgi":
+        df = pd.read_csv(path, thousands=",", parse_dates=["Departure date"])
 
-#     elif source == "panjiva":
-#         df = pd.read_excel(path, parse_dates=["Date"])
+    elif source == "panjiva":
+        df = pd.read_excel(path, parse_dates=["Date"])
 
-#     return df
+    return df
 
 def compile_data(directory_name):
     """
