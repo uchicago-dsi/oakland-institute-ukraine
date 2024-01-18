@@ -4,18 +4,19 @@
 # Last modified: 01/17/24
 # DSI
 
-import os
 import sys
+import os
 import unicodedata
 from deep_translator import GoogleTranslator, DeeplTranslator
 import pandas as pd
 from .get_data import get_data, compile_data
-from ..config import IG_FILES_PATH, COUNTRY_FILES
+# from ..config import IG_FILES_PATH, COUNTRY_FILES
+from config import IG_FILES_PATH, COUNTRY_FILES, ROOT_PATH
 import json
 from .map import top_parent, top_subsidiaries
 import re
 import copy
-from .transform_data import standard_company_name
+# from .transform_data import standard_company_name
 
 PRODUCTS_VAL = ["corn", "soya", "sunflower", "wheat", "sunflower", "barley",
                 "peas", "rapeseed", "sunflower", "vegetable", "soya", "canola",
@@ -64,7 +65,8 @@ SUBSIDIARY_DICT = {"enselcoagro": "Kernel Holding", "mhp": "MHP",
                    "agroprogress": "Industrial Milk \nCompany (IMC)"}
 
 # Import countries dictionaries from JSON file
-f = open('../names.json')
+# TODO: change path back to previous one
+f = open('names.json')
 data = json.load(f)
 
 ASIA_NAME_DICT = data["ASIA_NAME_DICT"]
@@ -301,7 +303,6 @@ def generate_path(countries):
         print("Wrong countries' name. Use 'asia', 'spain' or 'belgium'.")
     except:
         print("Unknown error")
-    
     path = os.path.join(IG_FILES_PATH, COUNTRY_FILES[countries])
 
     return path
@@ -465,7 +466,8 @@ def create_subsidiary_dict(n_parent_companies, n_subsidiaries, ig_data):
     n_parent_companies (int): top 'n' parent companies we want to 
     """
     # Import Land Matrix data and create list with top parent companies
-    deals = pd.read_csv("../data/land_matrix/deals.csv", delimiter=";")
+    path = os.path.join(ROOT_PATH, "data/land_matrix/deals.csv")
+    deals = pd.read_csv(path, delimiter=";")
     deals_c = filter_country(deals, "ukraine")
     parent_lst = top_parent(deals_c, n_parent_companies)
     parent_lst = extend_list(parent_lst, "|")
