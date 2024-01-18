@@ -7,39 +7,14 @@
 import pandas as pd
 from config import IG_FILES_PATH, COUNTRY_FILES
 from utils.clean_data import generate_path, clean_data, correct_name,\
-    create_subsidiary_dict, standard_company_name, ASIA_NAME_DICT,\
+    create_subsidiary_dict, ASIA_NAME_DICT,\
     SPAIN_NAME_DICT, BELGIUM_NAME_DICT
+from utils.transform_data import standard_company_name
 import os
 import sys
+import argparse
 
-def get_data(path, source):
-    """
-    Import data from .csv file name
-
-    Inputs:
-        path (str): path for data file
-        source (str): data source, either "ig" (Import Genius), "bsgi" (Black
-            Sea Grain Initiative) or panjiva.
-
-    Return (DataFrame): dataframe.
-    """
-
-    if source == "ig":
-        df = pd.read_csv(path, parse_dates=["EXPORT DATE"], encoding = "utf-8")
-        # Add 0 to HS Codes that have 9 digits because apparently Import Genius
-        # cuts the 0 at the beggining 
-        df["HS CODE"] = df["HS CODE"].astype(str)
-        df["HS CODE"] = df["HS CODE"].apply(lambda x: "0" + x if len(x) == 9 else x)
-    
-    elif source == "bsgi":
-        df = pd.read_csv(path, thousands=",", parse_dates=["Departure date"])
-
-    elif source == "panjiva":
-        df = pd.read_excel(path, parse_dates=["Date"])
-
-    return df
-
-def clean_ig_by_country(countries):
+def clean_ig_by_country(countries, save=True):
     """
     Get Import Genius (IG) data for specific countries.
 
@@ -49,7 +24,6 @@ def clean_ig_by_country(countries):
 
     Returns (DataFrame): table with filtered Import Genius data.
     """
-
     path = generate_path(countries)
     ig = clean_data("ig", path)
 
@@ -71,30 +45,31 @@ def clean_ig_by_country(countries):
     ig_c["company_std"] = standard_company_name(ig["shipper_low"], subsidiaries_dict)
 
     # Save clean IG dataset in "/data" directory
-    file_name = f"ig_clean_{countries}.csv"
-    export_path = os.path.join(os.path.dirname(path), file_name)
-    ig_c.to_csv(export_path, index=False)
+    if save:
+        file_name = f"ig_clean_{countries}.csv"
+        export_path = os.path.join(os.path.dirname(path), file_name)
+        ig_c.to_csv(export_path, index=False)
 
     return ig_c
 
 
 if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description="My parser")
+    parser.add_argument("country", type=str,
+                        help="Options are 'spain', 'belgium' and 'asia'")
+    parser.add_argument("--clean", type=bool,
+                        help="Cleans data and saves file by default",
+                        default=True)
+    # group = parser.add_mutually_exclusive_group(required=False)
+    # group.add_argument("--clean", action="store_true")
+    # group.add_argument("--visualize", action="store_true")
+    # group.add_argument("--run_all", action="store_true")
+    # parser.add_argument("save", type=bool, help="Save clean files. Default is true",
+    #                     default=True)
 
-    if len(sys.argv) == 1:
-        # Plot data in jupyter notebook with specified country (does the same
-        # as sending 'plot' as second argument)
+    # parser.set_defaults(clean=False, visualize=False, run_all=True)
 
-    elif len(sys.argv) == 2:
-        if sys.argv[1] == "import_data":
-            # Function to import data
-        elif sys.argv[1] == "clean_data":
-            # Function to clean data
-        elif sys.argv[1] == "transform_data":
-            # Function to transform data
-        elif sys.argv[1] == "plot":
-            # Plot data in jupyter notebook
-        elif sys.argv[1] == "run_all":
-            # Function to run the whole data pipeline for that country 
-        else:
-            print("Incorrect arguments. Send 'import_data', 'clean_data',\
-                  'transform_data', 'plot' or 'run_all'.")
+    args = parser.parse_args()
+
+    if args.clean:
+        clean_ig_by_country(args.country)
