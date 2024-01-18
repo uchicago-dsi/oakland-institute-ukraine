@@ -1,6 +1,6 @@
 import os
 
-BASE_PATH = os.path.dirname(os.getcwd())
-IG_FILES_PATH = os.path.join(BASE_PATH, "data/ig")
+ROOT_PATH = os.getcwd()
+IG_FILES_PATH = os.path.join(ROOT_PATH, "data/ig")
 COUNTRY_FILES = {"asia": "ig_asia_22-23.csv", "spain": "ig_spain_22-23.csv",
                  "belgium": "ig_belgium_22-23.csv"}
