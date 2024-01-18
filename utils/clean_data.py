@@ -10,7 +10,6 @@ import unicodedata
 from deep_translator import GoogleTranslator, DeeplTranslator
 import pandas as pd
 from .get_data import get_data, compile_data
-# from ..config import IG_FILES_PATH, COUNTRY_FILES
 from config import IG_FILES_PATH, COUNTRY_FILES, ROOT_PATH
 import json
 from .map import top_parent, top_subsidiaries
