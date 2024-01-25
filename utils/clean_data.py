@@ -64,8 +64,8 @@ SUBSIDIARY_DICT = {"enselcoagro": "Kernel Holding", "mhp": "MHP",
 
 # Import countries dictionaries from JSON file
 # TODO: change path back to previous one
-# f = open('names.json')
-f = open('../names.json')
+f = open('names.json') # works when running python pipeline.py command
+# f = open('../names.json') # works when running Jupyter notebook
 data = json.load(f)
 
 ASIA_NAME_DICT = data["ASIA_NAME_DICT"]
