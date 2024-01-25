@@ -15,9 +15,6 @@ RUN apt -y install python3-pip libspatialindex-dev \
 # set a directory for the app
 WORKDIR /app
 
-# copy all code besides
-COPY . .
-
 # copy requirements and install dependencies
 # TODO: I guess copying this file is no longer necessary if we're already
 # copying all the files with command above
@@ -28,6 +25,4 @@ RUN pip install --no-cache-dir -r requirements.txt
 ENV COUNTRY spain
 
 # run jupyter command
-CMD ["sh", "-c", "python pipeline.py ${COUNTRY} && jupyter notebook --port=8888 --no-browser --ip=0.0.0.0 --allow-root --NotebookApp.token='' --NotebookApp.password=''"]
-
-# CMD ["jupyter", "notebook", "--port=8888", "--no-browser", "--ip=0.0.0.0", "--allow-root", "--NotebookApp.token=''", "--NotebookApp.password=''"]
+CMD ["sh", "-c", "python pipeline.py ${COUNTRY}"]
