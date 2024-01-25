@@ -15,7 +15,6 @@ import json
 from .map import top_parent, top_subsidiaries
 import re
 import copy
-# from .transform_data import standard_company_name
 
 PRODUCTS_VAL = ["corn", "soya", "sunflower", "wheat", "sunflower", "barley",
                 "peas", "rapeseed", "sunflower", "vegetable", "soya", "canola",
@@ -65,7 +64,8 @@ SUBSIDIARY_DICT = {"enselcoagro": "Kernel Holding", "mhp": "MHP",
 
 # Import countries dictionaries from JSON file
 # TODO: change path back to previous one
-f = open('names.json')
+# f = open('names.json')
+f = open('../names.json')
 data = json.load(f)
 
 ASIA_NAME_DICT = data["ASIA_NAME_DICT"]
@@ -527,3 +527,32 @@ def clean_bsgi_by_country(countries):
         print("Wrong countries' name. Use 'asia', 'spain' or 'belgium'.")
 
     return bsgi_country
+
+def export_csv(df, file_name):
+    """
+    Export dataframe as .cvs file with a specific file name.
+
+    Inputs:
+        df (Dataframe): Import Genius clean and transformed data
+        file_name (string): file name for .csv file we want to export
+
+    Return: None. Exports .csv file in "/data" directory
+    """
+    df_filtered = df[["shipper", "company_std", "weight_ton"]]
+
+    translate_column(df_filtered, "shipper", "google", source="uk", target="en")
+
+    df_filtered = df_filtered.rename(columns={"shipper": "subsidiary",
+                                              "company_std": "parent_company",
+                                              "weight_ton": "weight_ton_subs",
+                                              "shipper_gt": "subsidiary_en"})\
+    [["subsidiary", "subsidiary_en", "parent_company", "weight_ton_subs"]].\
+        sort_values(by = "weight_ton_subs", ascending=False)
+    
+    df_g = df_filtered.groupby(["subsidiary", "subsidiary_en", "parent_company"],
+                               as_index=False).sum("weight_ton_subs").\
+                                sort_values(by=["weight_ton_subs"],
+                                            ascending=False)
+    
+    path = os.path.join("../data", file_name)
+    df_g.to_csv(path, index=False)

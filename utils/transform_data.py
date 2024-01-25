@@ -5,7 +5,7 @@
 # DSI
 
 from .record_linkage import filter_crop, test_crop
-from .plot import cargo_grouping, plot_pie
+from .plot import plot_pie, cargo_grouping
 import pandas as pd
 
 def estimate_weights(company_df, company_col, company_add, bsgi_df, bsgi_col, plot_title, crop=None):
