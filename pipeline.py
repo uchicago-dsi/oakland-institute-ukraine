@@ -5,7 +5,6 @@
 # DSI
 
 import pandas as pd
-from config import IG_FILES_PATH, COUNTRY_FILES
 from utils.clean_data import generate_path, clean_data, correct_name,\
     create_subsidiary_dict, ASIA_NAME_DICT,\
     SPAIN_NAME_DICT, BELGIUM_NAME_DICT
@@ -45,8 +44,11 @@ def clean_ig_by_country(countries, save=True):
     ig_c["company_std"] = standard_company_name(ig["shipper_low"], subsidiaries_dict)
 
     # Save clean IG dataset in "/data" directory
+    print("save: ", save)
     if save:
+        print("save activated")
         file_name = f"ig_clean_{countries}.csv"
+        print("file_name: ", file_name)
         export_path = os.path.join(os.path.dirname(path), file_name)
         ig_c.to_csv(export_path, index=False)
 
@@ -60,14 +62,6 @@ if __name__ == "__main__":
     parser.add_argument("--clean", type=bool,
                         help="Cleans data and saves file by default",
                         default=True)
-    # group = parser.add_mutually_exclusive_group(required=False)
-    # group.add_argument("--clean", action="store_true")
-    # group.add_argument("--visualize", action="store_true")
-    # group.add_argument("--run_all", action="store_true")
-    # parser.add_argument("save", type=bool, help="Save clean files. Default is true",
-    #                     default=True)
-
-    # parser.set_defaults(clean=False, visualize=False, run_all=True)
 
     args = parser.parse_args()
 
