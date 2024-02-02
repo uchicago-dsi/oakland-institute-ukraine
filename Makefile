@@ -19,7 +19,7 @@ run-pipeline:
 
 jupyter:
 	cd $(current_abs_path)
-	docker run -v $(current_abs_path):/app --rm -p 8888:8888 -t oi-ukraine jupyter lab --port=8888 --ip='*' --NotebookApp.token='' --NotebookApp.password='' --no-browser --notebook-dir=/app --allow-root
+	docker run -v $(current_abs_path):/app --rm -p 8888:8888 -t oi-ukraine jupyter lab --port=8888 --ip='*' --NotebookApp.token='' --NotebookApp.password='' --no-browser --notebook-dir=/app/notebooks --allow-root
 
 bash:
 	cd $(current_abs_path)
