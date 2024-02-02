@@ -16,10 +16,13 @@ RUN apt -y install python3-pip libspatialindex-dev \
 WORKDIR /app
 
 # copy requirements and install dependencies
-# TODO: I guess copying this file is no longer necessary if we're already
-# copying all the files with command above
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
+
+# install utils as a package
+COPY setup.py .
+COPY utils ./utils
+RUN pip install -e .
 
 # ENV COUNTRY=spain
 ENV COUNTRY spain

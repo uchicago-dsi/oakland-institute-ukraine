@@ -17,6 +17,9 @@ This setup should only have to be run once per machine you run it on.
    cd oakland-institute-ukraine
    ```
 5. Create a `data` directory and move the downloaded data files from step 2 to that directory.
+
+TODO: need to add instructions for .env file and Make commands
+
 6. Build the Docker image from the root project directory:
    ```sh
    docker build -t ukraine .
