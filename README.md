@@ -28,7 +28,7 @@ This setup should only have to be run once per machine you run it on.
    ```sh
    COUNTRY="country"
    ```
-9. Build the Docker image from the root project directory:
+9. Open Docker Desktop (in case it wasn't running already) and build the Docker image from the root project directory with the following command:
    ```sh
    docker build -t ukraine .
    ```
