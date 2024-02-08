@@ -10,68 +10,12 @@ import unicodedata
 from deep_translator import GoogleTranslator, DeeplTranslator
 import pandas as pd
 from .get_data import get_data, compile_data
-from config import IG_FILES_PATH, COUNTRY_FILES, ROOT_PATH
+from config import IG_FILES_PATH, COUNTRY_FILES, ROOT_PATH, PRODUCTS_VAL,\
+    CROP_DICT, HS_DICT, HS_BSGI
 import json
 from .map import top_parent, top_subsidiaries
 import re
 import copy
-
-PRODUCTS_VAL = ["corn", "soya", "sunflower", "wheat", "sunflower", "barley",
-                "peas", "rapeseed", "sunflower", "vegetable", "soya", "canola",
-                "rapeseed", "sunflower", "mixed", "wheat", "sugar beet"]
-
-CROP_DICT =  {'Rapeseed': 'rapeseed', 'Corn': 'corn',
-              'Sunflower meal': 'sunflower', 'Wheat': 'wheat',
-              'Sunflower oil': 'sunflower', 'Soya beans': 'soya',
-              'Barley': 'barley', 'Peas': 'peas',
-              'Sunflower seed': 'sunflower', 'Vegetable oil': 'vegetable',
-              'Soya oil': 'soya', 'Canola': 'canola',
-              'Rapeseed meal': 'rapeseed', 'Sunflower pellets': 'sunflower',
-              'Mixed': 'mixed', 'Wheat bran pellets': 'wheat',
-              'Sugar beet pellets': 'sugar beet'}
-
-HS_DICT = {"Rapeseed": "1205", "Rapeseed meal": "2306", "Canola": "1514",
-           "Corn": "1005", "Sunflower oil": "1512", "Sunflower seed": "1206",
-           "Sunflower pellets": "2306", "Sunflower meal": "2306",
-           "Wheat": "1001", "Soya beans": "1201", "Soya oil": "1507",
-           "Barley": "1003", "Peas": "0713", "Vegetable oil": "1516",
-           "Wheat bran pellets": "2302", "Mixed": "",
-           "Sugar beet pellets": "2302"}
-
-HS_BSGI = {"1205": "Rapeseed", "1514": "Canola",
-           "1005": "Corn", "1512": "Sunflower oil", "1206": "Sunflower seed",
-           "2306": "Sunflower meal", "1001":  "Wheat", "1201": "Soya beans",
-           "1507": "Soya oil", "1003":  "Barley", "0713": "Peas",
-           "1516": "Vegetable oil", "2302": "Sugar beet pellets"}
-
-SUBSIDIARY_DICT = {"enselcoagro": "Kernel Holding", "mhp": "MHP",
-                   "khmilnytske": "Astarta Holding",
-                   "slobozhanschynaagro": "Industrial Milk \nCompany (IMC)",
-                   "nibulon": "Nibulon", "cargill": "Cargill",
-                   "prykarpattya": "UkrLandFarming",
-                   "louisdreyfus": "Louis Dreyfus",
-                   "dobrobut": "Astarta Holding",
-                   "pivdenagroinvest": "TNA Corporate \nSolutions",
-                   "agroton": "Agroton Public \nLimited",
-                   "kernel": "Kernel Holding",
-                   "podillyaagroservice": "Kernel Holding",
-                   "agroholdyngms": "System Capital \nManagement",
-                   "buratagro": "Industrial Milk \nCompany (IMC)",
-                   "agroprosperis": "NHC Capital",
-                   "druzhbanova": "Kernel Holding",
-                   "astarta": "Astarta Holding",
-                   "agroprogress": "Industrial Milk \nCompany (IMC)"}
-
-# Import countries dictionaries from JSON file
-# TODO: change path back to previous one
-f = open('names.json') # works when running python pipeline.py command
-# f = open('../names.json') # works when running Jupyter notebook
-data = json.load(f)
-
-ASIA_NAME_DICT = data["ASIA_NAME_DICT"]
-SPAIN_NAME_DICT = data["SPAIN_NAME_DICT"]
-BELGIUM_NAME_DICT = data["BELGIUM_NAME_DICT"]
-KNOWN_COMPANIES = data["KNOWN_COMPANIES"]
 
 def keep_chr(ch):
     """
@@ -489,6 +433,13 @@ def create_subsidiary_dict(n_parent_companies, n_subsidiaries, ig_data):
     ig_data["shipper_low"] = ig_data["shipper"].str.lower()
 
     # Manually add some companies we identified separately
+    # Import countries dictionaries from JSON file
+    # TODO: change path back to previous one
+    f = open('names.json') # works when running python pipeline.py command
+    # f = open('../names.json') # works when running Jupyter notebook
+    data = json.load(f)
+
+    KNOWN_COMPANIES = data["KNOWN_COMPANIES"]
     subsidiaries_c = add_companies_manually(subsidiaries_uk, KNOWN_COMPANIES)
 
     return subsidiaries_c
@@ -528,7 +479,7 @@ def clean_bsgi_by_country(countries):
 
     return bsgi_country
 
-def export_csv(df, file_name):
+def export_csv(df, file_name, translate=False):
     """
     Export dataframe as .cvs file with a specific file name.
 
@@ -539,20 +490,22 @@ def export_csv(df, file_name):
     Return: None. Exports .csv file in "/data" directory
     """
     df_filtered = df[["shipper", "company_std", "weight_ton"]]
-
-    translate_column(df_filtered, "shipper", "google", source="uk", target="en")
-
+    
+    if translate:
+        translate_column(df_filtered, "shipper", "google", source="uk", target="en")
+    
     df_filtered = df_filtered.rename(columns={"shipper": "subsidiary",
-                                              "company_std": "parent_company",
-                                              "weight_ton": "weight_ton_subs",
-                                              "shipper_gt": "subsidiary_en"})\
-    [["subsidiary", "subsidiary_en", "parent_company", "weight_ton_subs"]].\
-        sort_values(by = "weight_ton_subs", ascending=False)
+                                                "company_std": "parent_company",
+                                                "weight_ton": "weight_ton_subs",
+                                                "shipper_gt": "subsidiary_en"})
+    slice_cols = ["subsidiary", "subsidiary_en", "parent_company", "weight_ton_subs"] if translate else ["subsidiary", "parent_company", "weight_ton_subs"]
+    df_filtered = df_filtered[slice_cols]
+    df_filtered = df_filtered.sort_values(by = "weight_ton_subs", ascending=False)
+        
     
-    df_g = df_filtered.groupby(["subsidiary", "subsidiary_en", "parent_company"],
-                               as_index=False).sum("weight_ton_subs").\
-                                sort_values(by=["weight_ton_subs"],
-                                            ascending=False)
-    
+    group_cols = ["subsidiary", "subsidiary_en", "parent_company"] if translate else ["subsidiary", "parent_company"]
+    df_g = df_filtered.groupby(group_cols, as_index=False)
+    df_g = df_g.sum("weight_ton_subs").sort_values(by=["weight_ton_subs"], ascending=False)
+
     path = os.path.join("../data", file_name)
     df_g.to_csv(path, index=False)
