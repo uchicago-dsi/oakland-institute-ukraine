@@ -2,6 +2,8 @@
 
 Large amounts of Ukraine’s arable land are controlled by a few agribusinesses. Oakland Institute has been tracking consolidation of agricultural land as well as land reform policy in Ukraine. The goal of this application is to analyze Ukrainian agricultural exports data to see the activity of some of the companies identified in Oakland Institute's report over time: [https://www.oaklandinstitute.org/war-theft-takeover-ukraine-agricultural-land](https://www.oaklandinstitute.org/war-theft-takeover-ukraine-agricultural-land)
 
+We are interested in the export shares of some Ukrainian companies to other countries and regions. The following code will help analyze export shares to the specified country or region: Spain, Belgium or Asia.
+
 ### Installation
 
 This setup should only have to be run once per machine you run it on.
@@ -22,14 +24,15 @@ This setup should only have to be run once per machine you run it on.
    mkdir data
    mv path/to/downloaded_data/ig path/to/repo/data/ig 
    ```
-
-TODO: need to add instructions for .env file and Make commands
-
-6. Build the Docker image from the root project directory:
+8. Create an `.env` file in the root directory and set the `COUNTRY` variable to the country/region you want to analyze: "spain", "belgium" or "asia". The `.env`file should look like this:
+   ```sh
+   COUNTRY="country"
+   ```
+9. Build the Docker image from the root project directory:
    ```sh
    docker build -t ukraine .
    ```
-7. TODO: Set this up as a Make command
+10 .TODO: Set this up as a Make command
    TODO: need to mount the data directory as a volume
    TODO: add a Docker bash command to the Makefile
    Run the Docker image:
