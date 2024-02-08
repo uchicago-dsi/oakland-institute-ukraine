@@ -43,7 +43,7 @@ This setup should only have to be run once per machine you run it on.
    make jupyter
    ```
 
-   a. Copy and paste the Jupyter server URL in your preferred web browser. 
+   a. Copy and paste the Jupyter server URL in your preferred web browser.\ 
    b. Open the `exports_shares.ipynb` file and run it to see the data visualizations for the corresponding country.  
  
 
