@@ -7,16 +7,17 @@ Large amounts of Ukraine’s arable land are controlled by a few agribusinesses.
 This setup should only have to be run once per machine you run it on.
 
 1. Install Docker. The project is designed to run in a Docker container. Therefore, the only prerequisite is Docker: [Get Docker](https://docs.docker.com/get-docker/)
-2. Dowload data files: [https://drive.google.com/drive/folders/1juoPDrmR-2--zAKIpj8LP2NAnkgqVsTL](https://drive.google.com/drive/folders/1juoPDrmR-2--zAKIpj8LP2NAnkgqVsTL)
-3. Clone the repo
+2. Clone the repo
    ```sh
    git clone https://github.com/uchicago-dsi/oakland-institute-ukraine.git
    ```
-4. Change to the root project directory:
+3. Change to the root project directory:
    ```sh
    cd oakland-institute-ukraine
    ```
-5. Create a `data` directory and move the downloaded data files from step 2 to that directory.
+4. Switch to the `dev` branch.
+5. Dowload data files: [here](https://drive.google.com/drive/folders/1OPAzWTEhAXpetQs9hApin_KW1GmGRpf4)
+7. Create a `data` directory and move the downloaded data files from step 2 to that directory.
 
 TODO: need to add instructions for .env file and Make commands
 
