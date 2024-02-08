@@ -18,7 +18,7 @@ This setup should only have to be run once per machine you run it on.
    cd oakland-institute-ukraine
    ```
 4. Switch to the `dev` branch.
-5. Dowload `ig` folder data files [here](https://drive.google.com/drive/folders/1OPAzWTEhAXpetQs9hApin_KW1GmGRpf4).
+5. Dowload all data files [here](https://drive.google.com/drive/folders/1juoPDrmR-2--zAKIpj8LP2NAnkgqVsTL).
 7. Create a `data` directory and move the downloaded data files (`ig` directory) from the previous step to the `data` directory you just created with something similar to the following commands:
    ```sh
    mkdir data
@@ -30,23 +30,23 @@ This setup should only have to be run once per machine you run it on.
    ```
 9. Open Docker Desktop (in case it wasn't running already) and build the Docker image from the root project directory with the following command:
    ```sh
-   docker build -t ukraine .
+   make build
    ```
-10 .TODO: Set this up as a Make command
-   TODO: need to mount the data directory as a volume
-   TODO: add a Docker bash command to the Makefile
-   Run the Docker image:
-
+10. If you want to see re-running the data pipeline (i.e. cleaning the data files) run the following command:
    ```sh
-   docker run -v $(pwd)/notebooks:/app/notebooks -v $(pwd)/data:/app/data --name notebooks-jupyter --rm -p 8888:8888 -t ukraine
+   make run-pipeline
    ```
-
-   This works:
-   `docker run -v $(pwd)/notebooks:/app/notebooks --rm -it ukraine /bin/bash`
-   Where `$(current_abs_path)` is the path to the repo directory in your local machine.
-
-8. Copy and paste the Jupyter server URL in your preferred web browser.
-9. Go to the `\notebooks` directory and open each notebook.
+   a. 
+   
+   If you want to see the data visualizations for the corresponding country without re-running the data pipeline (i.e. cleaning the data files again)
+   run:
+   ```sh
+   make jupyter
+   ```
+   
+   a. Copy and paste the Jupyter server URL in your preferred web browser.
+   b. Open the `exports_shares.ipynb` file and run it to see the data visualizations for the corresponding country.
+ 
 
 ### Data files
 
