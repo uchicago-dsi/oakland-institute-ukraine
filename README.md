@@ -16,8 +16,8 @@ This setup should only have to be run once per machine you run it on.
    cd oakland-institute-ukraine
    ```
 4. Switch to the `dev` branch.
-5. Dowload data files [here](https://drive.google.com/drive/folders/1OPAzWTEhAXpetQs9hApin_KW1GmGRpf4).
-7. Create a `data` directory and move the downloaded data files from step 2 to that directory.
+5. Dowload "ig" folder data files [here](https://drive.google.com/drive/folders/1OPAzWTEhAXpetQs9hApin_KW1GmGRpf4).
+7. Create a `data` directory and move the downloaded data files ("ig" directory) from the previous step to the `data` directory you just created.
 
 TODO: need to add instructions for .env file and Make commands
 
