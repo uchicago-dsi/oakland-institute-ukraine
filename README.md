@@ -31,21 +31,20 @@ This setup should only have to be run once per machine you run it on.
    ```sh
    make build
    ```
-10. If you want to re-run the data pipeline (i.e. cleaning the data files) run the following command:
+10. If you want to re-run the data pipeline (i.e. clean the data files) run the following command:
    ```sh
    make run-pipeline
    ```
    
    You can check the clean data files at the `data/ig/` directory named as "ig_clean_<country>".
 
-11. If you want to see the data visualizations for the corresponding country without re-running the data pipeline (i.e. cleaning the data files again) run:
+11. If you want to see the data visualizations for the corresponding country in a Jupyter notebook without re-running the data pipeline run:
    ```sh
    make jupyter
    ```
-
-   a. Copy and paste the Jupyter server URL in your preferred web browser.
-   
-   b. Open the `exports_shares.ipynb` file and run it to see the data visualizations for the corresponding country.  
+   a. Copy and paste the Jupyter server URL in your preferred web browser.\
+   b. Open the `exports_shares.ipynb` file and add the set the `country` variable to the corresponding country.
+   c. Run the notebook and see the visualizations.
  
 
 ### Data files
