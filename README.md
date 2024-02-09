@@ -2,7 +2,7 @@
 
 Large amounts of Ukraine’s arable land are controlled by a few agribusinesses. Oakland Institute has been tracking consolidation of agricultural land as well as land reform policy in Ukraine. The goal of this application is to analyze Ukrainian agricultural exports data to see the activity of some of the companies identified in Oakland Institute's report over time: [https://www.oaklandinstitute.org/war-theft-takeover-ukraine-agricultural-land](https://www.oaklandinstitute.org/war-theft-takeover-ukraine-agricultural-land)
 
-We are interested in the export shares of some Ukrainian companies to other countries and regions. The following code will help analyze export shares to the specified country or region: Spain, Belgium or Asia.
+We are interested in the export shares of some of these companies to other countries and regions. The goal of this project is to help analyze exports for one of the following countries or regions: Spain, Belgium or Asia. More destination countries could be analyzed but the data is unavailable.
 
 ### Installation
 
@@ -19,7 +19,7 @@ This setup should only have to be run once per machine you run it on.
    ```
 4. Switch to the `dev` branch.
 5. Dowload all data files [here](https://drive.google.com/drive/folders/1juoPDrmR-2--zAKIpj8LP2NAnkgqVsTL).
-6. Unzip the downloaded `.zip` file and move the `data` folder from the previous step to a `data` directory in your root project directory with something like:
+6. Unzip the downloaded `.zip` file and move the `data` folder from the previous step to a `data` directory in your repository root directory with something like:
    ```sh
    mv path/to/downloaded_data path/to/repo/data
    ```
