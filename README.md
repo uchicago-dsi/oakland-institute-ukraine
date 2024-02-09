@@ -2,43 +2,50 @@
 
 Large amounts of Ukraine’s arable land are controlled by a few agribusinesses. Oakland Institute has been tracking consolidation of agricultural land as well as land reform policy in Ukraine. The goal of this application is to analyze Ukrainian agricultural exports data to see the activity of some of the companies identified in Oakland Institute's report over time: [https://www.oaklandinstitute.org/war-theft-takeover-ukraine-agricultural-land](https://www.oaklandinstitute.org/war-theft-takeover-ukraine-agricultural-land)
 
+We are interested in the export shares of some of these companies to other countries and regions. The goal of this project is to help analyze exports for one of the following countries or regions: Spain, Belgium or Asia. More destination countries could be analyzed but the data is unavailable.
+
 ### Installation
 
 This setup should only have to be run once per machine you run it on.
 
 1. Install Docker. The project is designed to run in a Docker container. Therefore, the only prerequisite is Docker: [Get Docker](https://docs.docker.com/get-docker/)
-2. Dowload data files: [https://drive.google.com/drive/folders/1juoPDrmR-2--zAKIpj8LP2NAnkgqVsTL](https://drive.google.com/drive/folders/1juoPDrmR-2--zAKIpj8LP2NAnkgqVsTL)
-3. Clone the repo
+2. Clone the repo
    ```sh
    git clone https://github.com/uchicago-dsi/oakland-institute-ukraine.git
    ```
-4. Change to the root project directory:
+3. Change to the root project directory:
    ```sh
    cd oakland-institute-ukraine
    ```
-5. Create a `data` directory and move the downloaded data files from step 2 to that directory.
-
-TODO: need to add instructions for .env file and Make commands
-
-6. Build the Docker image from the root project directory:
+4. Switch to the `dev` branch.
+5. Dowload all data files [here](https://drive.google.com/drive/folders/1juoPDrmR-2--zAKIpj8LP2NAnkgqVsTL).
+6. Unzip the downloaded `.zip` file and move the `data` folder from the previous step to a `data` directory in your repository root directory with something like:
    ```sh
-   docker build -t ukraine .
+   mv path/to/downloaded_data path/to/repo/data
    ```
-7. TODO: Set this up as a Make command
-   TODO: need to mount the data directory as a volume
-   TODO: add a Docker bash command to the Makefile
-   Run the Docker image:
-
+7. Create an `.env` file in the root directory and set the `COUNTRY` variable to the country/region you want to analyze: "spain", "belgium" or "asia". The `.env`file should look like this:
    ```sh
-   docker run -v $(pwd)/notebooks:/app/notebooks -v $(pwd)/data:/app/data --name notebooks-jupyter --rm -p 8888:8888 -t ukraine
+   COUNTRY="country"
    ```
+8. Open Docker Desktop (in case it wasn't running already) and build the Docker image from the root project directory with the following command:
+   ```sh
+   make build
+   ```
+9. If you want to re-run the data pipeline (i.e. clean the data files) run the following command:
+   ```sh
+   make run-pipeline
+   ```
+   
+   You can check the clean data files at the `data/ig/` directory named as "ig_clean_country".
 
-   This works:
-   `docker run -v $(pwd)/notebooks:/app/notebooks --rm -it ukraine /bin/bash`
-   Where `$(current_abs_path)` is the path to the repo directory in your local machine.
+10. If you want to see the data visualizations for the corresponding country in a Jupyter notebook without re-running the data pipeline run:
+    ```sh
+    make jupyter
+    ```
+    a. Copy and paste the Jupyter server URL in your preferred web browser.\
+    b. Open the `exports_shares.ipynb` file and add the set the `country` variable to the corresponding country.\
+    c. Run the notebook and see the visualizations.
 
-8. Copy and paste the Jupyter server URL in your preferred web browser.
-9. Go to the `\notebooks` directory and open each notebook.
 
 ### Data files
 
