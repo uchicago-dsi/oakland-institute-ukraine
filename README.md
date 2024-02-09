@@ -42,11 +42,10 @@ This setup should only have to be run once per machine you run it on.
     ```sh
     make jupyter
     ```
+    a. Copy and paste the Jupyter server URL in your preferred web browser.\
+    b. Open the `exports_shares.ipynb` file and add the set the `country` variable to the corresponding country.
+    c. Run the notebook and see the visualizations.
 
-   a. Copy and paste the Jupyter server URL in your preferred web browser.\
-   b. Open the `exports_shares.ipynb` file and add the set the `country` variable to the corresponding country.
-   c. Run the notebook and see the visualizations.
- 
 
 ### Data files
 
