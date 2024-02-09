@@ -39,9 +39,9 @@ This setup should only have to be run once per machine you run it on.
    You can check the clean data files at the `data/ig/` directory named as "ig_clean_<country>".
 
 10. If you want to see the data visualizations for the corresponding country in a Jupyter notebook without re-running the data pipeline run:
-   ```sh
-   make jupyter
-   ```
+    ```sh
+    make jupyter
+    ```
 
    a. Copy and paste the Jupyter server URL in your preferred web browser.\
    b. Open the `exports_shares.ipynb` file and add the set the `country` variable to the corresponding country.
