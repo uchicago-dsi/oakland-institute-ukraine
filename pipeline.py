@@ -6,12 +6,17 @@
 
 import pandas as pd
 from utils.clean_data import generate_path, clean_data, correct_name,\
-    create_subsidiary_dict, ASIA_NAME_DICT,\
-    SPAIN_NAME_DICT, BELGIUM_NAME_DICT
+    create_subsidiary_dict
 from utils.transform_data import standard_company_name
 import os
-import sys
 import argparse
+import json
+
+f = open('names.json') # works when running python pipeline.py command
+data = json.load(f)
+ASIA_NAME_DICT = data["ASIA_NAME_DICT"]
+SPAIN_NAME_DICT = data["SPAIN_NAME_DICT"]
+BELGIUM_NAME_DICT = data["BELGIUM_NAME_DICT"]
 
 def clean_ig_by_country(countries, save=True):
     """
@@ -44,11 +49,8 @@ def clean_ig_by_country(countries, save=True):
     ig_c["company_std"] = standard_company_name(ig["shipper_low"], subsidiaries_dict)
 
     # Save clean IG dataset in "/data" directory
-    print("save: ", save)
     if save:
-        print("save activated")
         file_name = f"ig_clean_{countries}.csv"
-        print("file_name: ", file_name)
         export_path = os.path.join(os.path.dirname(path), file_name)
         ig_c.to_csv(export_path, index=False)
 
