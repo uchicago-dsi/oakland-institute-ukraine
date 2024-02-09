@@ -19,26 +19,26 @@ This setup should only have to be run once per machine you run it on.
    ```
 4. Switch to the `dev` branch.
 5. Dowload all data files [here](https://drive.google.com/drive/folders/1juoPDrmR-2--zAKIpj8LP2NAnkgqVsTL).
-7. Unzip the downloaded `.zip` file and move the `data` folder from the previous step to a `data` directory in your root project directory with something like:
+6. Unzip the downloaded `.zip` file and move the `data` folder from the previous step to a `data` directory in your root project directory with something like:
    ```sh
    mv path/to/downloaded_data path/to/repo/data
    ```
-8. Create an `.env` file in the root directory and set the `COUNTRY` variable to the country/region you want to analyze: "spain", "belgium" or "asia". The `.env`file should look like this:
+7. Create an `.env` file in the root directory and set the `COUNTRY` variable to the country/region you want to analyze: "spain", "belgium" or "asia". The `.env`file should look like this:
    ```sh
    COUNTRY="country"
    ```
-9. Open Docker Desktop (in case it wasn't running already) and build the Docker image from the root project directory with the following command:
+8. Open Docker Desktop (in case it wasn't running already) and build the Docker image from the root project directory with the following command:
    ```sh
    make build
    ```
-10. If you want to re-run the data pipeline (i.e. clean the data files) run the following command:
+9. If you want to re-run the data pipeline (i.e. clean the data files) run the following command:
    ```sh
    make run-pipeline
    ```
    
    You can check the clean data files at the `data/ig/` directory named as "ig_clean_<country>".
 
-11. If you want to see the data visualizations for the corresponding country in a Jupyter notebook without re-running the data pipeline run:
+10. If you want to see the data visualizations for the corresponding country in a Jupyter notebook without re-running the data pipeline run:
    ```sh
    make jupyter
    ```
