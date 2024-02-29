@@ -18,27 +18,29 @@ This setup should only have to be run once per machine you run it on.
    cd oakland-institute-ukraine
    ```
 4. Switch to the `dev` branch.
-5. Dowload all data files [here](https://drive.google.com/drive/folders/1juoPDrmR-2--zAKIpj8LP2NAnkgqVsTL).
-6. Unzip the downloaded `.zip` file and move the `data` folder from the previous step to a `data` directory in your repository root directory with something like:
+5. Dowload all data files [here](https://drive.google.com/drive/folders/1juoPDrmR-2--zAKIpj8LP2NAnkgqVsTL) to the root directory.
+6. Unzip the downloaded file. You should have a directory that looks like this:
    ```sh
-   mv path/to/downloaded_data path/to/repo/data
+   ├── data/
+   │   ├── clean
+   │   ├── raw
    ```
-7. Create an `.env` file in the root directory and set the `COUNTRY` variable to the country/region you want to analyze: "spain", "belgium" or "asia". The `.env`file should look like this:
+9. Create an `.env` file in the root directory and set the `COUNTRY` variable to the country/region you want to analyze: "spain", "belgium" or "asia". The `.env`file should look like this:
    ```sh
    COUNTRY="country"
    ```
-8. Open Docker Desktop (in case it wasn't running already) and build the Docker image from the root project directory with the following command:
+10. Open Docker Desktop (in case it wasn't running already) and build the Docker image from the root project directory with the following command:
    ```sh
    make build
    ```
-9. If you want to re-run the data pipeline (i.e. clean the data files) run the following command:
+11. If you want to re-run the data pipeline (i.e. clean the data files) run the following command:
    ```sh
    make run-pipeline
    ```
    
    You can check the clean data files at the `data/ig/` directory named as "ig_clean_country".
 
-10. If you want to see the data visualizations for the corresponding country in a Jupyter notebook without re-running the data pipeline run:
+11. If you want to see the data visualizations for the corresponding country in a Jupyter notebook without re-running the data pipeline run:
     ```sh
     make jupyter
     ```
