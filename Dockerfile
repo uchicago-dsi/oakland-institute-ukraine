@@ -1,8 +1,9 @@
 # TODO: set up logic to handle different chip architecture using environment variables in a Makefile
 # Resources:
 # https://stackoverflow.com/questions/40873165/use-docker-run-command-to-pass-arguments-to-cmd-in-dockerfile
+ARG ARCH
 
-FROM --platform=linux/arm64 osgeo/gdal:ubuntu-full-3.6.3
+FROM --platform=linux/${ARCH} osgeo/gdal:ubuntu-full-3.6.3
 
 RUN apt-get -y update 
 

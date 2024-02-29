@@ -1,6 +1,7 @@
 mkfile_path := $(abspath $(lastword $(MAKEFILE_LIST)))
 current_dir := $(notdir $(patsubst %/,%,$(dir $(mkfile_path))))
 current_abs_path := $(subst Makefile,,$(mkfile_path))
+ARCH := $(shell uname -m)
 
 include .env
 
@@ -10,8 +11,8 @@ paths:
 	@echo $(current_abs_path)
 
 build:
-	cd $(current_abs_path)
-	docker build . -t oi-ukraine
+	cd "$(current_abs_path)"
+	docker build . -t oi-ukraine --build-arg ARCH=$(ARCH)
 
 run-pipeline:
 	cd $(current_abs_path)
