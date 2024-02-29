@@ -5,7 +5,10 @@ import os
 # ROOT_PATH = os.path.dirname(os.getcwd()) # Path that runs correctly when we run Jupyter notebook
 # ROOT_PATH = os.getcwd() # path that runs correctly when running python pipeline.py
 ROOT_PATH = os.path.dirname(os.path.realpath(__file__))
-IG_FILES_PATH = os.path.join(ROOT_PATH, "data/ig")
+RAW_FILES_PATH = os.path.join(ROOT_PATH, "data/raw")
+CLEAN_FILES_PATH = os.path.join(ROOT_PATH, "data/clean")
+IG_FILES_PATH = os.path.join(RAW_FILES_PATH, "ig")
+
 COUNTRY_FILES = {"asia": "ig_asia_22-23.csv", "spain": "ig_spain_22-23.csv",
                  "belgium": "ig_belgium_22-23.csv"}
 CLEAN_FILES = {"asia": "ig_clean_asia.csv", "spain": "ig_clean_spain.csv",
