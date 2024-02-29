@@ -11,7 +11,7 @@ paths:
 	@echo $(current_abs_path)
 
 build:
-	cd "$(current_abs_path)"
+	cd $(current_abs_path)
 	docker build . -t oi-ukraine --build-arg ARCH=$(ARCH)
 
 run-pipeline:

@@ -11,7 +11,7 @@ from deep_translator import GoogleTranslator, DeeplTranslator
 import pandas as pd
 from .get_data import get_data, compile_data
 from config import IG_FILES_PATH, COUNTRY_FILES, ROOT_PATH, PRODUCTS_VAL,\
-    CROP_DICT, HS_DICT, HS_BSGI
+    CROP_DICT, HS_DICT, HS_BSGI, CLEAN_FILES_PATH, RAW_FILES_PATH
 import json
 from .map import top_parent, top_subsidiaries
 import re
@@ -409,7 +409,7 @@ def create_subsidiary_dict(n_parent_companies, n_subsidiaries, ig_data):
     n_parent_companies (int): top 'n' parent companies we want to 
     """
     # Import Land Matrix data and create list with top parent companies
-    path = os.path.join(ROOT_PATH, "data/land_matrix/deals.csv")
+    path = os.path.join(RAW_FILES_PATH, "land_matrix/deals.csv")
     deals = pd.read_csv(path, delimiter=";")
     deals_c = filter_country(deals, "ukraine")
     parent_lst = top_parent(deals_c, n_parent_companies)
@@ -507,5 +507,5 @@ def export_csv(df, file_name, translate=False):
     df_g = df_filtered.groupby(group_cols, as_index=False)
     df_g = df_g.sum("weight_ton_subs").sort_values(by=["weight_ton_subs"], ascending=False)
 
-    path = os.path.join("../data", file_name)
+    path = os.path.join(CLEAN_FILES_PATH, file_name)
     df_g.to_csv(path, index=False)

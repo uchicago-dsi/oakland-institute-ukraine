@@ -11,6 +11,7 @@ from utils.transform_data import standard_company_name
 import os
 import argparse
 import json
+from config import CLEAN_FILES_PATH
 
 f = open('names.json') # works when running python pipeline.py command
 data = json.load(f)
@@ -51,7 +52,7 @@ def clean_ig_by_country(countries, save=True):
     # Save clean IG dataset in "/data" directory
     if save:
         file_name = f"ig_clean_{countries}.csv"
-        export_path = os.path.join(os.path.dirname(path), file_name)
+        export_path = os.path.join(CLEAN_FILES_PATH, file_name)
         ig_c.to_csv(export_path, index=False)
 
     return ig_c
