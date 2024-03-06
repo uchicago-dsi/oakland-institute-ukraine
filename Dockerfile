@@ -1,4 +1,3 @@
-# TODO: set up logic to handle different chip architecture using environment variables in a Makefile
 # Resources:
 # https://stackoverflow.com/questions/40873165/use-docker-run-command-to-pass-arguments-to-cmd-in-dockerfile
 ARG ARCH
@@ -25,7 +24,6 @@ COPY setup.py .
 COPY utils ./utils
 RUN pip install -e .
 
-# ENV COUNTRY=spain
 ENV COUNTRY spain
 
 # run jupyter command
