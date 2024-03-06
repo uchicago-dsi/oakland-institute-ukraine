@@ -16,7 +16,7 @@ build:
 
 run-pipeline:
 	cd $(current_abs_path)
-	docker run -e COUNTRY=$(COUNTRY) -v $(current_abs_path):/app -t oi-ukraine
+	docker run -u 1000:1000 -e COUNTRY=$(COUNTRY) -v $(current_abs_path):/app -t oi-ukraine
 
 jupyter:
 	cd $(current_abs_path)
