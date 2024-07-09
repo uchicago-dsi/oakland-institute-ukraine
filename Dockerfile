@@ -1,5 +1,8 @@
-# TODO: set up logic to handle different chip architecture using environment variables
-FROM --platform=linux/arm64 osgeo/gdal:ubuntu-full-3.6.3
+# Resources:
+# https://stackoverflow.com/questions/40873165/use-docker-run-command-to-pass-arguments-to-cmd-in-dockerfile
+ARG ARCH
+
+FROM --platform=linux/${ARCH} osgeo/gdal:ubuntu-full-3.6.3
 
 RUN apt-get -y update 
 
@@ -12,15 +15,16 @@ RUN apt -y install python3-pip libspatialindex-dev \
 # set a directory for the app
 WORKDIR /app
 
-# copy all the files to the container
+# copy requirements and install dependencies
 COPY requirements.txt .
-
-# install dependencies
 RUN pip install --no-cache-dir -r requirements.txt
 
-COPY . .
+# install utils as a package
+COPY setup.py .
+COPY utils ./utils
+RUN pip install -e .
 
-# RUN mkdir -p /app/data/{ig, bsgi, panjiva, land_matrix, regional_maps}
+ENV COUNTRY spain
 
-# run the command
-CMD ["jupyter", "notebook", "--port=8888", "--no-browser", "--ip=0.0.0.0", "--allow-root", "--NotebookApp.token=''", "--NotebookApp.password=''"]
+# run jupyter command
+CMD ["sh", "-c", "python pipeline.py ${COUNTRY}"]

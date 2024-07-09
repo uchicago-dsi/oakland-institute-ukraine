@@ -5,7 +5,7 @@
 # DSI
 
 import recordlinkage
-from .clean_data import PRODUCTS_VAL, translate_column, clean_column
+from config import PRODUCTS_VAL
 from .plot import cargo_grouping
 
 def test_crop(crop):

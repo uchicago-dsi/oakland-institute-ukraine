@@ -2,66 +2,85 @@
 
 Large amounts of Ukraine’s arable land are controlled by a few agribusinesses. Oakland Institute has been tracking consolidation of agricultural land as well as land reform policy in Ukraine. The goal of this application is to analyze Ukrainian agricultural exports data to see the activity of some of the companies identified in Oakland Institute's report over time: [https://www.oaklandinstitute.org/war-theft-takeover-ukraine-agricultural-land](https://www.oaklandinstitute.org/war-theft-takeover-ukraine-agricultural-land)
 
+We are interested in the export shares of some of these companies to other countries and regions. The goal of this project is to help analyze exports for one of the following countries or regions: Spain, Belgium or Asia. More destination countries could be analyzed but the data is unavailable.
+
 ### Installation
 
 This setup should only have to be run once per machine you run it on.
 
 1. Install Docker. The project is designed to run in a Docker container. Therefore, the only prerequisite is Docker: [Get Docker](https://docs.docker.com/get-docker/)
-2. Dowload data files: [https://drive.google.com/drive/folders/1juoPDrmR-2--zAKIpj8LP2NAnkgqVsTL](https://drive.google.com/drive/folders/1juoPDrmR-2--zAKIpj8LP2NAnkgqVsTL)
-3. Clone the repo
+2. Clone the repo
    ```sh
    git clone https://github.com/uchicago-dsi/oakland-institute-ukraine.git
    ```
-4. Change to the root project directory:
+3. Change to the root project directory:
    ```sh
    cd oakland-institute-ukraine
    ```
-5. Create a ```data``` directory and move the downloaded data files from step 2 to that directory.
-6. Build the Docker image from the root project directory:
+4. Switch to the `dev` branch.
+5. Dowload all data files [here](https://drive.google.com/drive/folders/1juoPDrmR-2--zAKIpj8LP2NAnkgqVsTL) to the root directory.
+6. Unzip the downloaded file. You should have a directory that looks like this:
    ```sh
-   docker build -t ukraine .
+   ├── data/
+   │   ├── clean
+   │   ├── raw
    ```
-7. Run the Docker image:
+9. Create an `.env` file in the root directory and set the `COUNTRY` variable to the country/region you want to analyze: "spain", "belgium" or "asia". The `.env`file should look like this:
    ```sh
-   docker run -v $(current_abs_path):/notebooks --name notebooks-jupyter --rm -p 8888:8888 -t ukraine
+   COUNTRY="country"
+   ```
+10. Open Docker Desktop (in case it wasn't running already) and build the Docker image from the root project directory with the following command:
+   ```sh
+   make build
+   ```
+11. If you want to re-run the data pipeline (i.e. clean the data files) run the following command:
+   ```sh
+   make run-pipeline
    ```
    
-   Where ```$(current_abs_path)``` is the path to the repo directory in your local machine.
-8. Copy and paste the Jupyter server URL in your preferred web browser.
-9. Go to the ```\notebooks``` directory and open each notebook.
+   You can check the clean data files at the `data/ig/` directory named as "ig_clean_country".
+
+11. If you want to see the data visualizations for the corresponding country in a Jupyter notebook without re-running the data pipeline run:
+    ```sh
+    make jupyter
+    ```
+    a. Copy and paste the Jupyter server URL in your preferred web browser.\
+    b. Open the `exports_shares.ipynb` file and add the set the `country` variable to the corresponding country.\
+    c. Run the notebook and see the visualizations.
+
 
 ### Data files
 
-```/bsgi```
+`/bsgi`
 
-```bsgi_destinations.csv```: Black Sea Grain Initiative dataset with volume of exports
+`bsgi_destinations.csv`: Black Sea Grain Initiative dataset with volume of exports
 data ("total metric tons" column) grouped by country of destination ("Country" column).
 Data corresponds to three Black Sea ports: Odesa, Chornomorsk, Yuzhny/Pivdennyi.<br>
-```bsgi_outbound.csv```: Black Sea Grain Initiative dataset with exports
+`bsgi_outbound.csv`: Black Sea Grain Initiative dataset with exports
 data disaggregated at the shipment level. Data corresponds to three Black Sea
 ports: Odesa, Chornomorsk, Yuzhny/Pivdennyi.
 
-```/ig```
+`/ig`
 
-```ig_kernel_10000.csv```: Import Genius data containing information on shipment exports for Kernel
+`ig_kernel_10000.csv`: Import Genius data containing information on shipment exports for Kernel
 (company in top 10 firms controlling agricultural land in Ukraine).
 
-```/land_matrix```
+`/land_matrix`
 
-```deals.csv```: Land Matrix data on land deals around the world at the "Company" level.
+`deals.csv`: Land Matrix data on land deals around the world at the "Company" level.
 It also has information about the "Target country" of the land deal.<br>
-```locations.csv```: Land Matrix data on land deals locations with coordinates ("Point" column).
+`locations.csv`: Land Matrix data on land deals locations with coordinates ("Point" column).
 It seems that locations are at disaggregated at least at the "hromada" level (municipal level).
 
-```/panjiva```
+`/panjiva`
 
 Excel files with export data from Panjiva for the top 10 firms controlling
 agricultural land in Ukraine and its subsidiaries. Files are named following the
-syntax "panjiva_[companya_name].xlsx".
+syntax "panjiva\_[companya_name].xlsx".
 
-```/regional_maps```
+`/regional_maps`
 
-```ukr_admbnda_adm3_sspe_20230201.shp```: shape file from The Humanitarian Data Exchange
+`ukr_admbnda_adm3_sspe_20230201.shp`: shape file from The Humanitarian Data Exchange
 project with Ukrainian administrative divisions at the 3rd level of disaggregation.
 We believe it is the "hromada" or municipality level but we cannot confirm from
 the available documentation: [https://data.humdata.org/dataset/cod-ab-ukr](https://data.humdata.org/dataset/cod-ab-ukr)
